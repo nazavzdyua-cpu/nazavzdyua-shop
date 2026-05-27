@@ -23,6 +23,10 @@
   <a href="contacts.html">Контакти</a>
 </nav>
 
+<button class="cart-floating" onclick="openCart()">
+  🛒 <span id="cartCount">0</span>
+</button>
+
 <a href="https://www.instagram.com/nazavzdy.ua?igsh=MTdod3Fsb2txaDExZA%3D%3D&utm_source=qr"
 target="_blank"
 class="sticky-instagram">
@@ -32,9 +36,7 @@ class="sticky-instagram">
 <section class="page-hero">
   <p class="brand-small">NAZAVZDY.UA</p>
   <h1>Каталог прикрас</h1>
-  <p>
-    Оберіть прикрасу та створіть свій особливий спогад.
-  </p>
+  <p>Оберіть прикрасу, додайте фото або текст — і ми створимо ваш особистий спогад.</p>
 </section>
 
 <section class="section ideas">
@@ -58,8 +60,8 @@ class="sticky-instagram">
       <img src="images/product1.jpeg" alt="">
       <h3>Медальйон з підвіскою</h3>
       <p>499 грн</p>
-      <button onclick="openForm('Медальйон з підвіскою','499','images/product1.jpeg')">
-        Замовити
+      <button onclick="openItemModal('Медальйон з підвіскою', 499, 'images/product1.jpeg')">
+        Додати в корзину
       </button>
     </div>
 
@@ -67,8 +69,8 @@ class="sticky-instagram">
       <img src="images/product2.jpeg" alt="">
       <h3>Каблучка-медальйон</h3>
       <p>449 грн</p>
-      <button onclick="openForm('Каблучка-медальйон','449','images/product2.jpeg')">
-        Замовити
+      <button onclick="openItemModal('Каблучка-медальйон', 449, 'images/product2.jpeg')">
+        Додати в корзину
       </button>
     </div>
 
@@ -76,8 +78,8 @@ class="sticky-instagram">
       <img src="images/product3.jpeg" alt="">
       <h3>Каблучка-медальйон серце</h3>
       <p>399 грн</p>
-      <button onclick="openForm('Каблучка-медальйон серце','399','images/product3.jpeg')">
-        Замовити
+      <button onclick="openItemModal('Каблучка-медальйон серце', 399, 'images/product3.jpeg')">
+        Додати в корзину
       </button>
     </div>
 
@@ -85,8 +87,8 @@ class="sticky-instagram">
       <img src="images/product4.jpeg" alt="">
       <h3>Медальйон з підвіскою серце</h3>
       <p>510 грн</p>
-      <button onclick="openForm('Медальйон з підвіскою серце','510','images/product4.jpeg')">
-        Замовити
+      <button onclick="openItemModal('Медальйон з підвіскою серце', 510, 'images/product4.jpeg')">
+        Додати в корзину
       </button>
     </div>
 
@@ -116,70 +118,77 @@ class="sticky-instagram">
   </div>
 </section>
 
-<div class="popup" id="popup">
+<div class="popup" id="itemModal">
   <div class="popup-content">
 
-    <span class="close" onclick="closeForm()">×</span>
+    <span class="close" onclick="closeItemModal()">×</span>
 
-    <img id="popupImage" class="popup-image">
+    <img id="itemImage" class="popup-image">
 
-    <h2 id="productTitle"></h2>
-    <p id="productPrice"></p>
+    <h2 id="itemTitle"></h2>
+    <p id="itemPrice"></p>
 
-    <form id="orderForm">
+    <label class="form-label">Кількість прикрас цієї моделі</label>
+    <input type="number" id="itemQuantity" min="1" value="1">
 
-      <input
-        type="text"
-        id="name"
-        placeholder="Ваше ім’я"
-        required>
+    <div id="unitFields"></div>
 
-      <input
-        type="tel"
-        id="phone"
-        placeholder="Номер телефону"
-        required>
+    <button id="submitBtn" onclick="addCurrentToCart()">
+      Додати в корзину
+    </button>
 
-      <input
-        type="number"
-        id="quantity"
-        min="1"
-        value="1">
+  </div>
+</div>
 
-      <label class="form-label">
-        Кількість фото
-      </label>
+<div class="cart-panel" id="cartPanel">
+  <button class="menu-close" onclick="closeCart()">×</button>
 
-      <select id="photoCount">
+  <h2>Корзина</h2>
 
-        <option value="1">
-          1 фото — входить у вартість
-        </option>
+  <div id="cartItems"></div>
 
-        <option value="2">
-          2 фото — +49 грн
-        </option>
+  <h3>Загальна сума: <span id="cartTotal">0 грн</span></h3>
 
-      </select>
+  <input type="text" id="customerName" placeholder="Ваше імʼя">
+  <input type="tel" id="customerPhone" placeholder="Номер телефону">
 
-      <p id="totalPrice" class="total-price">
-        Загальна вартість: 0 грн
-      </p>
+  <button id="submitBtn" onclick="openConfirmOrder()">
+    Перевірити замовлення
+  </button>
+</div>
 
-      <textarea
-        id="comment"
-        placeholder="Коментар до замовлення">
-      </textarea>
+<div class="popup" id="confirmModal">
+  <div class="popup-content">
 
-      <button
-        type="submit"
-        id="submitBtn">
-        Оформити замовлення
-      </button>
+    <span class="close" onclick="closeConfirmModal()">×</span>
 
-    </form>
+    <h2>Підтвердження замовлення</h2>
 
-    <p id="successMessage"></p>
+    <div id="confirmContent"></div>
+
+    <button id="confirmSendBtn" onclick="confirmAndSendOrder()">
+      Підтвердити замовлення
+    </button>
+
+    <button class="btn btn-light" onclick="closeConfirmModal()">
+      Повернутись назад
+    </button>
+
+  </div>
+</div>
+
+<div class="popup" id="thanksModal">
+  <div class="popup-content">
+
+    <h2>Дякуємо за замовлення!</h2>
+
+    <p class="wide-text">
+      Найближчим часом ми з вами звʼяжемось.
+    </p>
+
+    <button id="submitBtn" onclick="closeThanksModal()">
+      Закрити
+    </button>
 
   </div>
 </div>
