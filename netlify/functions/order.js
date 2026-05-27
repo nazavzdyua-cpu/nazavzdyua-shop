@@ -12,23 +12,29 @@ exports.handler = async function(event) {
     const BOT_TOKEN = process.env.BOT_TOKEN;
     const CHAT_ID = process.env.CHAT_ID;
 
+    const itemsText = data.items.map((item, index) => {
+      return `
+${index + 1}. ${item.product}
+Ціна: ${item.price} грн
+Фото: ${item.photoCount}
+Коментар: ${item.comment || "Без коментаря"}
+Файл: ${item.fileName || "Не додано"}
+`;
+    }).join("\n");
+
     const message = `
 🛍 НОВЕ ЗАМОВЛЕННЯ
 
-💍 Товар: ${data.product}
-💰 Ціна: ${data.price}
-🔢 Кількість: ${data.quantity}
-🖼 Фото: ${data.photoCount}
-💵 ${data.totalPrice}
+👤 Імʼя: ${data.customer.name}
+📞 Телефон: ${data.customer.phone}
 
-👤 Ім’я: ${data.name}
-📞 Телефон: ${data.phone}
+📦 Товари:
+${itemsText}
 
-📝 Коментар:
-${data.comment || "Без коментаря"}
+💵 Загальна сума: ${data.total} грн
 `;
 
-    const response = await fetch(
+    const msgResponse = await fetch(
       `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
       {
         method: "POST",
@@ -42,15 +48,46 @@ ${data.comment || "Без коментаря"}
       }
     );
 
-    const result = await response.json();
+    const msgResult = await msgResponse.json();
 
-    if (!result.ok) {
-      console.log("TELEGRAM ERROR:", result);
-
+    if (!msgResult.ok) {
       return {
         statusCode: 500,
-        body: JSON.stringify(result)
+        body: JSON.stringify(msgResult)
       };
+    }
+
+    for (let i = 0; i < data.items.length; i++) {
+      const item = data.items[i];
+
+      if (item.fileBase64 && item.fileName) {
+        const buffer = Buffer.from(item.fileBase64, "base64");
+
+        const formData = new FormData();
+
+        formData.append("chat_id", CHAT_ID);
+
+        formData.append(
+          "document",
+          new Blob([buffer], {
+            type: item.fileType || "application/octet-stream"
+          }),
+          item.fileName
+        );
+
+        formData.append(
+          "caption",
+          `${i + 1}. ${item.product}\nКоментар: ${item.comment || "Без коментаря"}`
+        );
+
+        await fetch(
+          `https://api.telegram.org/bot${BOT_TOKEN}/sendDocument`,
+          {
+            method: "POST",
+            body: formData
+          }
+        );
+      }
     }
 
     return {
@@ -66,8 +103,7 @@ ${data.comment || "Без коментаря"}
     return {
       statusCode: 500,
       body: JSON.stringify({
-        error: error.message,
-        full: String(error)
+        error: error.message
       })
     };
   }
