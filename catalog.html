@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NAZAVZDY.UA — Каталог</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<nav class="floating-nav">
+<button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+
+<nav class="side-menu" id="sideMenu">
+  <button class="menu-close" onclick="closeMenu()">×</button>
+  <p class="menu-brand">NAZAVZDY.UA</p>
+
   <a href="index.html">Головна</a>
   <a href="catalog.html" class="active">Каталог</a>
   <a href="how.html">Як замовити</a>
@@ -16,21 +23,30 @@
   <a href="contacts.html">Контакти</a>
 </nav>
 
+<a href="https://www.instagram.com/nazavzdy.ua?igsh=MTdod3Fsb2txaDExZA%3D%3D&utm_source=qr"
+target="_blank"
+class="sticky-instagram">
+<img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png">
+</a>
+
 <section class="page-hero">
   <p class="brand-small">NAZAVZDY.UA</p>
   <h1>Каталог прикрас</h1>
-  <p>Оберіть прикрасу, додайте фото або текст — і ми створимо ваш особистий спогад.</p>
+  <p>
+    Оберіть прикрасу та створіть свій особливий спогад.
+  </p>
 </section>
 
 <section class="section ideas">
   <h2>Що можна додати?</h2>
+
   <p class="wide-text">
-    Це може бути фото з коханою людиною, домашнім улюбленцем, особлива фраза,
-    дата або будь-яке ваше фото.
+    Це може бути фото з коханою людиною, домашнім улюбленцем,
+    особлива дата, фраза або будь-яке ваше фото.
   </p>
 
   <div class="info-box">
-    <p><strong>1 фото</strong> входить у вартість прикраси.</p>
+    <p><strong>1 фото</strong> входить у вартість.</p>
     <p><strong>2 фото</strong> — доплата 49 грн.</p>
   </div>
 </section>
@@ -39,31 +55,39 @@
   <div class="products-grid">
 
     <div class="card">
-      <img src="images/product1.jpeg" alt="Медальйон з підвіскою">
+      <img src="images/product1.jpeg" alt="">
       <h3>Медальйон з підвіскою</h3>
       <p>499 грн</p>
-      <button onclick="openForm('Медальйон з підвіскою', '499 грн', 'images/product1.jpeg')">Замовити</button>
+      <button onclick="openForm('Медальйон з підвіскою','499','images/product1.jpeg')">
+        Замовити
+      </button>
     </div>
 
     <div class="card">
-      <img src="images/product2.jpeg" alt="Каблучка-медальйон">
+      <img src="images/product2.jpeg" alt="">
       <h3>Каблучка-медальйон</h3>
       <p>449 грн</p>
-      <button onclick="openForm('Каблучка-медальйон', '449 грн', 'images/product2.jpeg')">Замовити</button>
+      <button onclick="openForm('Каблучка-медальйон','449','images/product2.jpeg')">
+        Замовити
+      </button>
     </div>
 
     <div class="card">
-      <img src="images/product3.jpeg" alt="Каблучка-медальйон серце">
+      <img src="images/product3.jpeg" alt="">
       <h3>Каблучка-медальйон серце</h3>
       <p>399 грн</p>
-      <button onclick="openForm('Каблучка-медальйон серце', '399 грн', 'images/product3.jpeg')">Замовити</button>
+      <button onclick="openForm('Каблучка-медальйон серце','399','images/product3.jpeg')">
+        Замовити
+      </button>
     </div>
 
     <div class="card">
-      <img src="images/product4.jpeg" alt="Медальйон з підвіскою серце">
+      <img src="images/product4.jpeg" alt="">
       <h3>Медальйон з підвіскою серце</h3>
       <p>510 грн</p>
-      <button onclick="openForm('Медальйон з підвіскою серце', '510 грн', 'images/product4.jpeg')">Замовити</button>
+      <button onclick="openForm('Медальйон з підвіскою серце','510','images/product4.jpeg')">
+        Замовити
+      </button>
     </div>
 
   </div>
@@ -71,50 +95,99 @@
 
 <section class="section custom-order">
   <div class="custom-order-box">
+
     <h2>Не знайшли потрібний варіант?</h2>
+
     <p>
-      Якщо ви хочете замовити щось, чого зараз немає в каталозі —
-      напишіть нам в Instagram. Ми спробуємо допомогти та створити
-      щось особливе саме для вас.
+      Якщо ви хочете замовити щось, чого немає у каталозі —
+      напишіть нам в Instagram. Ми спробуємо допомогти
+      та створити щось особливе саме для вас.
     </p>
 
-    <a href="https://www.instagram.com/nazavzdy.ua?igsh=MTdod3Fsb2txaDExZA%3D%3D&utm_source=qr" target="_blank" class="instagram-footer dark">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram">
+    <a
+      href="https://www.instagram.com/nazavzdy.ua?igsh=MTdod3Fsb2txaDExZA%3D%3D&utm_source=qr"
+      target="_blank"
+      class="instagram-footer dark">
+
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png">
       <span>Написати в Instagram</span>
     </a>
+
   </div>
 </section>
 
 <div class="popup" id="popup">
   <div class="popup-content">
+
     <span class="close" onclick="closeForm()">×</span>
 
-    <img id="popupImage" class="popup-image" alt="Фото товару">
+    <img id="popupImage" class="popup-image">
+
     <h2 id="productTitle"></h2>
     <p id="productPrice"></p>
 
     <form id="orderForm">
-      <input type="text" id="name" placeholder="Ваше ім’я" required>
-      <input type="tel" id="phone" placeholder="Номер телефону" required>
-      <input type="number" id="quantity" min="1" value="1" required>
 
-      <label class="form-label">Кількість фото</label>
-      <select id="photoCount" required>
-        <option value="1">1 фото — входить у вартість</option>
-        <option value="2">2 фото — +49 грн</option>
+      <input
+        type="text"
+        id="name"
+        placeholder="Ваше ім’я"
+        required>
+
+      <input
+        type="tel"
+        id="phone"
+        placeholder="Номер телефону"
+        required>
+
+      <input
+        type="number"
+        id="quantity"
+        min="1"
+        value="1">
+
+      <label class="form-label">
+        Кількість фото
+      </label>
+
+      <select id="photoCount">
+
+        <option value="1">
+          1 фото — входить у вартість
+        </option>
+
+        <option value="2">
+          2 фото — +49 грн
+        </option>
+
       </select>
 
-      <p id="totalPrice" class="total-price">Загальна вартість: 0 грн</p>
+      <p id="totalPrice" class="total-price">
+        Загальна вартість: 0 грн
+      </p>
 
-      <input type="file" id="photo" accept="image/*">
-      <textarea id="comment" placeholder="Коментар до замовлення"></textarea>
+      <textarea
+        id="comment"
+        placeholder="Коментар до замовлення">
+      </textarea>
 
-      <button type="submit" id="submitBtn">Оформити замовлення</button>
+      <button
+        type="submit"
+        id="submitBtn">
+        Оформити замовлення
+      </button>
+
     </form>
 
     <p id="successMessage"></p>
+
   </div>
 </div>
+
+<footer>
+  <h2>NAZAVZDY.UA</h2>
+  <p>Ваші спогади — назавжди поруч</p>
+</footer>
 
 <script src="script.js"></script>
 </body>
