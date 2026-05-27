@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NAZAVZDY.UA — Як замовити</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Як замовити | NAZAVZDY.UA</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<nav class="floating-nav">
+<button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+
+<nav class="side-menu" id="sideMenu">
+  <button class="menu-close" onclick="closeMenu()">×</button>
+  <p class="menu-brand">NAZAVZDY.UA</p>
+
   <a href="index.html">Головна</a>
   <a href="catalog.html">Каталог</a>
   <a href="how.html" class="active">Як замовити</a>
@@ -16,24 +23,87 @@
   <a href="contacts.html">Контакти</a>
 </nav>
 
+<a href="https://www.instagram.com/nazavzdy.ua?igsh=MTdod3Fsb2txaDExZA%3D%3D&utm_source=qr"
+target="_blank"
+class="sticky-instagram">
+<img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png">
+</a>
+
 <section class="page-hero">
   <p class="brand-small">NAZAVZDY.UA</p>
-  <h1>Як замовити?</h1>
-  <p>Усе максимально просто — оберіть прикрасу, додайте фото та залиште контакти.</p>
+  <h1>Як оформити замовлення</h1>
+
+  <p>
+    Процес займає лише декілька хвилин.
+    Ми намагаємось зробити його максимально простим та комфортним.
+  </p>
 </section>
 
 <section class="section">
+
   <div class="steps-grid">
-    <div><span>01</span><h3>Оберіть прикрасу</h3><p>Перейдіть у каталог і виберіть медальйон або каблучку.</p></div>
-    <div><span>02</span><h3>Додайте фото</h3><p>Можна додати 1 фото безкоштовно або 2 фото з доплатою 49 грн.</p></div>
-    <div><span>03</span><h3>Залиште контакти</h3><p>Вкажіть ім’я, номер телефону та коментар до замовлення.</p></div>
-    <div><span>04</span><h3>Ми зв’яжемось</h3><p>Після заявки ми напишемо або зателефонуємо для підтвердження.</p></div>
+
+    <div>
+      <span>КРОК 1</span>
+      <h3>Оберіть прикрасу</h3>
+      <p>
+        Перейдіть у каталог та виберіть варіант,
+        який вам подобається.
+      </p>
+    </div>
+
+    <div>
+      <span>КРОК 2</span>
+      <h3>Додайте побажання</h3>
+      <p>
+        Вкажіть кількість фото,
+        коментар або інші деталі.
+      </p>
+    </div>
+
+    <div>
+      <span>КРОК 3</span>
+      <h3>Залиште контакти</h3>
+      <p>
+        Вкажіть номер телефону
+        і ми звʼяжемось з вами.
+      </p>
+    </div>
+
+    <div>
+      <span>КРОК 4</span>
+      <h3>Підтвердження</h3>
+      <p>
+        Після заявки ми уточнюємо деталі
+        та запускаємо виготовлення.
+      </p>
+    </div>
+
   </div>
+
 </section>
 
 <section class="section">
-  <a href="catalog.html" class="btn">Перейти в каталог</a>
+
+  <div class="info-box">
+
+    <h2>Важливо</h2>
+
+    <p class="wide-text">
+      Якщо у вас нестандартне замовлення або особлива ідея —
+      напишіть нам в Instagram.
+      Ми завжди відкриті до індивідуальних рішень.
+    </p>
+
+  </div>
+
 </section>
 
+<footer>
+  <h2>NAZAVZDY.UA</h2>
+  <p>Ваші спогади — назавжди поруч</p>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
