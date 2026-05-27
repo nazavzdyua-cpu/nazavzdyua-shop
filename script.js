@@ -2,6 +2,16 @@ let selectedProduct = '';
 let selectedPrice = '';
 let selectedBasePrice = 0;
 
+function toggleMenu() {
+  document.getElementById('sideMenu')?.classList.toggle('active');
+  document.getElementById('menuOverlay')?.classList.toggle('active');
+}
+
+function closeMenu() {
+  document.getElementById('sideMenu')?.classList.remove('active');
+  document.getElementById('menuOverlay')?.classList.remove('active');
+}
+
 function openForm(product, price, image) {
   selectedProduct = product;
   selectedPrice = price;
