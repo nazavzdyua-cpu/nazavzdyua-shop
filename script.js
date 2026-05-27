@@ -71,8 +71,52 @@ document.getElementById('orderForm')?.addEventListener('submit', async function(
     successMessage.innerText =
       'Дякуємо за замовлення, найближчим часом ми з вами звʼяжемось';
 
+    document.getElementById('orderForm')?.addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const submitBtn = document.getElementById('submitBtn');
+  const successMessage = document.getElementById('successMessage');
+
+  const orderData = {
+    product: selectedProduct,
+    price: selectedPrice,
+    name: document.getElementById('name').value,
+    phone: document.getElementById('phone').value,
+    quantity: document.getElementById('quantity').value,
+    photoCount: document.getElementById('photoCount').value,
+    totalPrice: document.getElementById('totalPrice').innerText,
+    comment: document.getElementById('comment').value
+  };
+
+  submitBtn.disabled = true;
+  submitBtn.innerText = 'Відправляємо...';
+
+  try {
+    const response = await fetch('/.netlify/functions/order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(orderData)
+    });
+
+    if (!response.ok) {
+      throw new Error('Помилка');
+    }
+
+    successMessage.innerText =
+      'Дякуємо за замовлення, найближчим часом ми з вами звʼяжемось';
+
     document.getElementById('orderForm').reset();
-    updateTotalPrice();
+
+  } catch (error) {
+    successMessage.innerText =
+      'Помилка відправки. Спробуйте ще раз.';
+  }
+
+  submitBtn.disabled = false;
+  submitBtn.innerText = 'Оформити замовлення';
+});
 
   } catch (error) {
     successMessage.innerText =
