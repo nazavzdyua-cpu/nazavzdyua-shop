@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NAZAVZDY.UA — Контакти</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Контакти | NAZAVZDY.UA</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<nav class="floating-nav">
+<button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+
+<nav class="side-menu" id="sideMenu">
+  <button class="menu-close" onclick="closeMenu()">×</button>
+  <p class="menu-brand">NAZAVZDY.UA</p>
+
   <a href="index.html">Головна</a>
   <a href="catalog.html">Каталог</a>
   <a href="how.html">Як замовити</a>
@@ -16,21 +23,70 @@
   <a href="contacts.html" class="active">Контакти</a>
 </nav>
 
+<a
+  href="https://www.instagram.com/nazavzdy.ua?igsh=MTdod3Fsb2txaDExZA%3D%3D&utm_source=qr"
+  target="_blank"
+  class="sticky-instagram">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png">
+</a>
+
 <section class="page-hero">
   <p class="brand-small">NAZAVZDY.UA</p>
+
   <h1>Контакти</h1>
-  <p>Маєте питання або хочете обговорити індивідуальне замовлення? Напишіть нам.</p>
+
+  <p>
+    Ми завжди відкриті до ваших запитань,
+    побажань та індивідуальних замовлень.
+  </p>
 </section>
 
-<section class="section contact-card">
-  <h2>Наш Instagram</h2>
-  <p>Тут можна переглянути новинки, приклади робіт і написати нам напряму.</p>
+<section class="section">
 
-  <a href="https://www.instagram.com/nazavzdy.ua?igsh=MTdod3Fsb2txaDExZA%3D%3D&utm_source=qr" target="_blank" class="instagram-footer dark">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram">
-    <span>Перейти в Instagram</span>
-  </a>
+  <div class="contact-card">
+
+    <h2>Instagram</h2>
+
+    <p class="wide-text">
+      Найшвидший спосіб зв’язатись з нами —
+      написати в Instagram.
+    </p>
+
+    <a
+      href="https://www.instagram.com/nazavzdy.ua?igsh=MTdod3Fsb2txaDExZA%3D%3D&utm_source=qr"
+      target="_blank"
+      class="instagram-footer dark">
+
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png">
+      <span>@nazavzdy.ua</span>
+
+    </a>
+
+  </div>
+
 </section>
 
+<section class="section">
+
+  <div class="info-box">
+
+    <h2>Індивідуальні замовлення</h2>
+
+    <p class="wide-text">
+      Якщо у вас є власна ідея, нестандартне побажання
+      або ви хочете створити щось особливе —
+      напишіть нам. Ми спробуємо знайти рішення разом.
+    </p>
+
+  </div>
+
+</section>
+
+<footer>
+  <h2>NAZAVZDY.UA</h2>
+  <p>Ваші спогади — назавжди поруч</p>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
