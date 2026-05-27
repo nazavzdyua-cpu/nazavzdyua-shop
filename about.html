@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NAZAVZDY.UA — Про нас</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Про нас | NAZAVZDY.UA</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<nav class="floating-nav">
+<button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+
+<nav class="side-menu" id="sideMenu">
+  <button class="menu-close" onclick="closeMenu()">×</button>
+  <p class="menu-brand">NAZAVZDY.UA</p>
+
   <a href="index.html">Головна</a>
   <a href="catalog.html">Каталог</a>
   <a href="how.html">Як замовити</a>
@@ -16,28 +23,91 @@
   <a href="contacts.html">Контакти</a>
 </nav>
 
+<a href="https://www.instagram.com/nazavzdy.ua?igsh=MTdod3Fsb2txaDExZA%3D%3D&utm_source=qr"
+target="_blank"
+class="sticky-instagram">
+<img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png">
+</a>
+
 <section class="page-hero">
   <p class="brand-small">NAZAVZDY.UA</p>
   <h1>Про нас</h1>
-  <p>Ми створюємо прикраси, які допомагають зберегти найважливіші моменти життя.</p>
-</section>
 
-<section class="section">
-  <p class="wide-text">
-    NAZAVZDY.UA — це бренд прикрас з епоксидної смоли, у яких можна зберегти фото,
-    фразу, дату або маленьку історію. Ми віримо, що прикраса може бути не просто аксесуаром,
-    а особистим символом, який завжди поруч.
+  <p>
+    Ми створюємо прикраси, які мають не лише красу,
+    а й особисту історію.
   </p>
 </section>
 
-<section class="section benefits">
-  <div class="benefits-grid">
-    <div>Теплий handmade-підхід</div>
-    <div>Індивідуальний дизайн</div>
-    <div>Емоційний подарунок</div>
-    <div>Пам’ять у деталях</div>
+<section class="section">
+
+  <div class="info-box">
+
+    <h2>Наша ідея</h2>
+
+    <p class="wide-text">
+      Ми віримо, що важливі моменти повинні залишатись поруч.
+      Саме тому створюємо медальйони, каблучки та інші прикраси
+      з епоксидної смоли, які можуть зберігати фото, дату,
+      слова або особливий спогад.
+    </p>
+
   </div>
+
 </section>
 
+<section class="section">
+
+  <div class="benefits-grid">
+
+    <div>
+      <h3>Індивідуальність</h3>
+      <p>
+        Кожне замовлення створюється окремо
+        саме під вашу історію.
+      </p>
+    </div>
+
+    <div>
+      <h3>Ручна робота</h3>
+      <p>
+        Ми приділяємо увагу деталям
+        та якості кожного виробу.
+      </p>
+    </div>
+
+    <div>
+      <h3>Спогади назавжди</h3>
+      <p>
+        Прикраса стає не просто аксесуаром,
+        а особливою памʼяттю.
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="section">
+
+  <div class="custom-order-box">
+
+    <h2>NAZAVZDY.UA</h2>
+
+    <p>
+      Для нас важливо не просто створити прикрасу,
+      а допомогти вам зберегти щось цінне.
+    </p>
+
+  </div>
+
+</section>
+
+<footer>
+  <h2>NAZAVZDY.UA</h2>
+  <p>Зберігаємо важливе назавжди</p>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
