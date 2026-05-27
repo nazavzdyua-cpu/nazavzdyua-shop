@@ -904,3 +904,49 @@ footer {
     right: -100%;
   }
 }
+.confirm-buttons{
+  display:flex;
+  gap:14px;
+  justify-content:flex-end;
+  margin-top:22px;
+  flex-wrap:wrap;
+}
+
+#confirmSendBtn{
+  background:#2b1d17;
+  color:white;
+  border:none;
+  border-radius:18px;
+  padding:15px 28px;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+
+  backdrop-filter:blur(18px);
+  box-shadow:0 10px 28px rgba(0,0,0,.16);
+
+  transition:.25s;
+}
+
+#confirmSendBtn:hover{
+  transform:translateY(-2px);
+  background:#6b4a35;
+}
+
+.btn-light{
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(0,0,0,.08);
+  border-radius:18px;
+  padding:15px 28px;
+  font-size:16px;
+  cursor:pointer;
+
+  backdrop-filter:blur(18px);
+
+  transition:.25s;
+}
+
+.btn-light:hover{
+  transform:translateY(-2px);
+  background:white;
+}
