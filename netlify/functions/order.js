@@ -45,6 +45,8 @@ ${data.comment || "Без коментаря"}
     const result = await response.json();
 
     if (!result.ok) {
+      console.log("TELEGRAM ERROR:", result);
+
       return {
         statusCode: 500,
         body: JSON.stringify(result)
@@ -59,10 +61,13 @@ ${data.comment || "Без коментаря"}
     };
 
   } catch (error) {
+    console.log("ORDER ERROR:", error);
+
     return {
       statusCode: 500,
       body: JSON.stringify({
-        error: error.message
+        error: error.message,
+        full: String(error)
       })
     };
   }
