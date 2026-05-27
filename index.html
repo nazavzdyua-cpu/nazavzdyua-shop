@@ -8,7 +8,14 @@
 </head>
 <body>
 
-<nav class="floating-nav">
+<button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
+
+<nav class="side-menu" id="sideMenu">
+  <button class="menu-close" onclick="closeMenu()">×</button>
+  <p class="menu-brand">NAZAVZDY.UA</p>
+
   <a href="index.html" class="active">Головна</a>
   <a href="catalog.html">Каталог</a>
   <a href="how.html">Як замовити</a>
@@ -27,7 +34,9 @@
   <div class="hero-content">
     <div class="brand-mark">N</div>
     <p class="brand-small">NAZAVZDY.UA</p>
+
     <h1>Ваші спогади — завжди поруч</h1>
+
     <p class="hero-text">
       Прикраси з епоксидної смоли, які зберігають фото, емоції та важливі моменти назавжди.
     </p>
@@ -49,6 +58,7 @@
 
 <section class="section benefits">
   <h2>Чому це особливо?</h2>
+
   <div class="benefits-grid">
     <div>Індивідуальне виготовлення</div>
     <div>Фото або текст на вибір</div>
@@ -62,5 +72,6 @@
   <p>Зберігаємо важливе назавжди</p>
 </footer>
 
+<script src="script.js"></script>
 </body>
 </html>
