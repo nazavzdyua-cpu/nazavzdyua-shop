@@ -12,7 +12,32 @@ function closeMenu() {
   document.getElementById('menuOverlay')?.classList.remove('active');
 }
 
-function openItemModal(product, price, image) {
+function openItemModal(name, price, image) {
+    const isKeychain = name.toLowerCase().includes("брелок");
+
+    document.getElementById("modal-product-name").textContent = name;
+    document.getElementById("modal-product-price").textContent = price + " грн";
+    document.getElementById("modal-product-image").src = image;
+
+    const photoCountSelect = document.getElementById("photoCount");
+
+    if (isKeychain) {
+        photoCountSelect.value = "1";
+        photoCountSelect.disabled = true;
+        photoCountSelect.style.opacity = "0.5";
+    } else {
+        photoCountSelect.disabled = false;
+        photoCountSelect.style.opacity = "1";
+    }
+
+    currentItem = {
+        name,
+        price,
+        image
+    };
+
+    itemModal.classList.add("active");
+}
   currentProduct = {
     product,
     price: Number(price),
