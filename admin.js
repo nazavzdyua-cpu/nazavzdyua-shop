@@ -317,6 +317,7 @@ function openProductModal(productId = null) {
     document.getElementById("productCategory").value = product.category || "medalions";
     document.getElementById("productDescriptionType").value = product.description_type || "medalion";
     document.getElementById("productStatus").value = product.status || "В наявності";
+    document.getElementById("productStock").value = product.stock ?? 1;
     document.getElementById("productDescription").value = product.description || "";
     document.getElementById("productImage").value = product.image_url || "";
     document.getElementById("productImagePreview").innerHTML =
@@ -331,6 +332,7 @@ function openProductModal(productId = null) {
     document.getElementById("productCategory").value = "medalions";
     document.getElementById("productDescriptionType").value = "medalion";
     document.getElementById("productStatus").value = "В наявності";
+    document.getElementById("productStock").value = 1;
     document.getElementById("productDescription").value = "";
     document.getElementById("productImage").value = "";
     document.getElementById("productImagePreview").innerHTML = "";
@@ -349,7 +351,15 @@ async function saveProduct() {
   const price = document.getElementById("productPrice").value;
   const category = document.getElementById("productCategory").value;
   const description_type = document.getElementById("productDescriptionType").value;
-  const status = document.getElementById("productStatus").value;
+  const stock = Number(document.getElementById("productStock").value || 0);
+
+let status = "В наявності";
+
+if (stock <= 0) {
+  status = "Немає в наявності";
+} else if (stock <= 2) {
+  status = "Закінчується";
+}
   const description = document.getElementById("productDescription").value.trim();
   let image_url = document.getElementById("productImage").value.trim();
 
