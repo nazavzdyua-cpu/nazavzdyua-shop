@@ -1,1 +1,53 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAZAVZDY.UA — Адмінка</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<section class="page-hero">
+  <p class="brand-small">NAZAVZDY.UA</p>
+  <h1>Панель замовлень</h1>
+  <p>Всі замовлення в одному місці</p>
+</section>
+
+<section class="section">
+
+<div class="glass-card admin-login" id="loginBox">
+
+<h2>Вхід</h2>
+
+<input
+type="password"
+id="adminPassword"
+placeholder="Пароль">
+
+<button onclick="loginAdmin()">
+Увійти
+</button>
+
+</div>
+
+<div id="ordersBox" style="display:none;">
+
+<div class="admin-top">
+<h2>Замовлення</h2>
+
+<button class="btn-light" onclick="loadOrders()">
+Оновити
+</button>
+</div>
+
+<div id="ordersList"></div>
+
+</div>
+
+</section>
+
+<script src="admin.js"></script>
+
+</body>
+</html>
