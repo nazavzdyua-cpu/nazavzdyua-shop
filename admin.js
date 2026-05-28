@@ -452,8 +452,13 @@ async function changeStock(productId, amount) {
 
   if (!product) return;
 
-  const currentStock = Number(product.stock || 0);
-  const newStock = Math.max(currentStock + amount, 0);
+  const oldStock = Number(product.stock || 0);
+  const newStock = Math.max(oldStock + amount, 0);
+
+  product.stock = newStock;
+  product.status = getAutoProductStatus(newStock);
+
+  renderProducts();
 
   try {
     await saveProductData({
@@ -469,13 +474,13 @@ async function changeStock(productId, amount) {
       sort_order: product.sort_order || 0
     });
 
-    await loadProducts();
-
   } catch (error) {
+    product.stock = oldStock;
+    product.status = getAutoProductStatus(oldStock);
+    renderProducts();
     alert(error.message);
   }
 }
-
 async function deleteProduct(productId) {
   const confirmDelete = confirm("Видалити цей товар?");
 
