@@ -273,3 +273,21 @@ async function confirmAndSendOrder() {
 function closeThanksModal() {
   document.getElementById('thanksModal').style.display = 'none';
 }
+function filterProducts(category, button) {
+  const cards = document.querySelectorAll('.card');
+  const buttons = document.querySelectorAll('.filter-btn');
+
+  buttons.forEach(btn => btn.classList.remove('active'));
+  button.classList.add('active');
+
+  cards.forEach(card => {
+    const cardCategory = card.getAttribute('data-category');
+
+    if (category === 'all' || cardCategory === category) {
+      card.style.display = 'block';
+      card.style.animation = 'fadeUp 0.35s ease';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
