@@ -1,5 +1,4 @@
 let cart = [];
-
 let currentProduct = null;
 
 function toggleMenu() {
@@ -12,32 +11,7 @@ function closeMenu() {
   document.getElementById('menuOverlay')?.classList.remove('active');
 }
 
-function openItemModal(name, price, image) {
-    const isKeychain = name.toLowerCase().includes("брелок");
-
-    document.getElementById("modal-product-name").textContent = name;
-    document.getElementById("modal-product-price").textContent = price + " грн";
-    document.getElementById("modal-product-image").src = image;
-
-    const photoCountSelect = document.getElementById("photoCount");
-
-    if (isKeychain) {
-        photoCountSelect.value = "1";
-        photoCountSelect.disabled = true;
-        photoCountSelect.style.opacity = "0.5";
-    } else {
-        photoCountSelect.disabled = false;
-        photoCountSelect.style.opacity = "1";
-    }
-
-    currentItem = {
-        name,
-        price,
-        image
-    };
-
-    itemModal.classList.add("active");
-}
+function openItemModal(product, price, image) {
   currentProduct = {
     product,
     price: Number(price),
@@ -60,6 +34,7 @@ function closeItemModal() {
 function renderUnitFields() {
   const quantity = Number(document.getElementById('itemQuantity').value) || 1;
   const container = document.getElementById('unitFields');
+  const isKeychain = currentProduct?.product?.toLowerCase().includes('брелок');
 
   container.innerHTML = '';
 
@@ -69,10 +44,22 @@ function renderUnitFields() {
         <h4>Прикраса ${i}</h4>
 
         <label class="form-label">Кількість фото</label>
-        <select class="unit-photo-count">
-          <option value="1">1 фото — входить у вартість</option>
-          <option value="2">2 фото — +49 грн</option>
-        </select>
+
+        ${
+          isKeychain
+            ? `
+              <select class="unit-photo-count" disabled>
+                <option value="1">1 фото — входить у вартість</option>
+              </select>
+              <p class="cart-note">Для брелока доступне тільки 1 фото.</p>
+            `
+            : `
+              <select class="unit-photo-count">
+                <option value="1">1 фото — входить у вартість</option>
+                <option value="2">2 фото — +49 грн</option>
+              </select>
+            `
+        }
 
         <label class="form-label">Файл для прикраси</label>
         <input type="file" class="unit-file" accept="image/*">
@@ -91,7 +78,7 @@ function addCurrentToCart() {
   const comments = document.querySelectorAll('.unit-comment');
 
   for (let i = 0; i < photoCounts.length; i++) {
-    const photoCount = Number(photoCounts[i].value);
+    const photoCount = Number(photoCounts[i].value) || 1;
     const extra = photoCount === 2 ? 49 : 0;
 
     cart.push({
@@ -111,9 +98,7 @@ function addCurrentToCart() {
 
 function updateCartButton() {
   const count = document.getElementById('cartCount');
-  if (count) {
-    count.innerText = cart.length;
-  }
+  if (count) count.innerText = cart.length;
 }
 
 function openCart() {
