@@ -1533,3 +1533,42 @@ footer {
     flex-direction: column;
   }
 }
+.catalog-status {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  backdrop-filter: blur(12px);
+}
+
+.product-image-wrap {
+  position: relative;
+}
+
+.catalog-available {
+  background: rgba(67,190,104,.18);
+  color: #1c7b3c;
+}
+
+.catalog-low {
+  background: rgba(255,184,51,.22);
+  color: #8a5b00;
+}
+
+.catalog-out {
+  background: rgba(203,61,61,.18);
+  color: #9d2929;
+}
+
+.disabled-btn {
+  opacity: .55;
+  cursor: not-allowed !important;
+}
+
+.disabled-btn:hover {
+  transform: none !important;
+}
