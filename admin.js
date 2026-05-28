@@ -411,6 +411,7 @@ const selectedFile = fileInput.files[0];
         category,
         description_type,
         status,
+        stock,
         description,
         image_url,
         image_path: "",
