@@ -42,7 +42,7 @@ function getDescription(type) {
 
   return `
     <p><strong>Невеликий аксесуар із великим змістом.</strong></p>
-    <p>Брелок може містити <strong>1 фото</strong>, логотип або марку авто — те, що має особливе значення саме для вас.</p>
+    <p>Брелок може містити <strong>1 фото</strong>, а також текст, логотип або марку авто — те, що має особливе значення саме для вас.</p>
     <ul>
       <li>Підходить для ключів, сумок та інших аксесуарів</li>
       <li>Термін виготовлення — 2–3 дні</li>
@@ -304,12 +304,27 @@ async function confirmAndSendOrder() {
       body: JSON.stringify(orderData)
     });
 
-    if (!response.ok) throw new Error('Помилка відправки');
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error('Помилка відправки');
+    }
 
     closeConfirmModal();
     closeCart();
 
     document.getElementById('thanksModal').style.display = 'block';
+
+    const thanksTitle = document.querySelector('#thanksModal h2');
+    const thanksText = document.querySelector('#thanksModal .wide-text');
+
+    if (thanksTitle) {
+      thanksTitle.innerText = `Дякуємо за замовлення №${result.orderId}!`;
+    }
+
+    if (thanksText) {
+      thanksText.innerText = 'Найближчим часом ми з вами звʼяжемось.';
+    }
 
     cart = [];
     updateCartButton();
