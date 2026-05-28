@@ -17,83 +17,55 @@
 <section class="section admin-section">
 
   <div class="admin-login-card" id="loginBox">
-
     <h2>Вхід в акаунт</h2>
     <p>Введіть пароль адміністратора</p>
 
-    <input
-      type="password"
-      id="adminPassword"
-      placeholder="Пароль">
+    <input type="password" id="adminPassword" placeholder="Пароль">
 
-    <button class="admin-main-btn" onclick="loginAdmin()">
+    <button type="button" class="admin-main-btn" onclick="loginAdmin()">
       Увійти
     </button>
-
   </div>
 
   <div id="adminPanel" style="display:none;">
 
     <div class="admin-tabs">
-
-      <button
-        class="admin-tab active"
-        id="ordersTabBtn"
-        onclick="switchTab('orders')">
-
+      <button type="button" class="admin-tab active" id="ordersTabBtn" onclick="switchTab('orders')">
         Замовлення
       </button>
 
-      <button
-        class="admin-tab"
-        id="productsTabBtn"
-        onclick="switchTab('products')">
-
+      <button type="button" class="admin-tab" id="productsTabBtn" onclick="switchTab('products')">
         Товари
       </button>
-
     </div>
-
-    <!-- ORDERS -->
 
     <div id="ordersTab">
 
       <div class="admin-toolbar">
-
         <div>
           <h2>Замовлення</h2>
           <p>Всі заявки з сайту</p>
         </div>
 
-        <button
-          class="admin-main-btn small"
-          onclick="loadOrders()">
-
+        <button type="button" class="admin-main-btn small" onclick="loadOrders()">
           Оновити
         </button>
-
       </div>
 
       <div class="admin-filters">
-
         <input
           type="text"
           id="orderSearch"
           placeholder="Пошук за номером, імʼям або телефоном"
           oninput="renderOrders()">
 
-        <select
-          id="statusFilter"
-          onchange="renderOrders()">
-
+        <select id="statusFilter" onchange="renderOrders()">
           <option value="all">Всі статуси</option>
           <option value="Нове">Нове</option>
           <option value="В роботі">В роботі</option>
           <option value="Готове">Готове</option>
           <option value="Відправлено">Відправлено</option>
-
         </select>
-
       </div>
 
       <div id="adminStats"></div>
@@ -101,24 +73,17 @@
 
     </div>
 
-    <!-- PRODUCTS -->
-
     <div id="productsTab" style="display:none;">
 
       <div class="admin-toolbar">
-
         <div>
           <h2>Товари</h2>
-          <p>Редагування каталогу</p>
+          <p>Редагування каталогу та наявності</p>
         </div>
 
-        <button
-          class="admin-main-btn small"
-          onclick="openProductModal()">
-
+        <button type="button" class="admin-main-btn small" onclick="openProductModal()">
           + Додати товар
         </button>
-
       </div>
 
       <div id="productsList"></div>
@@ -129,72 +94,46 @@
 
 </section>
 
-<!-- PRODUCT MODAL -->
-
 <div class="popup" id="productModal">
-
   <div class="popup-content">
 
     <span class="close" onclick="closeProductModal()">×</span>
 
-    <h2 id="productModalTitle">
-      Новий товар
-    </h2>
+    <h2 id="productModalTitle">Новий товар</h2>
 
-    <input
-      type="text"
-      id="productName"
-      placeholder="Назва">
+    <input type="text" id="productName" placeholder="Назва товару">
+    <input type="number" id="productPrice" placeholder="Ціна">
 
-    <input
-      type="number"
-      id="productPrice"
-      placeholder="Ціна">
+    <label class="form-label">Кількість в наявності</label>
+    <input type="number" id="productStock" min="0" value="1" placeholder="Кількість">
 
+    <label class="form-label">Категорія</label>
     <select id="productCategory">
       <option value="medalions">Медальйони</option>
       <option value="rings">Каблучки</option>
       <option value="keychains">Брелоки</option>
     </select>
 
+    <label class="form-label">Тип опису</label>
     <select id="productDescriptionType">
       <option value="medalion">Опис медальйона</option>
       <option value="ring">Опис каблучки</option>
       <option value="keychain">Опис брелока</option>
     </select>
 
-    <select id="productStatus">
-      <option value="В наявності">В наявності</option>
-      <option value="Закінчується">Закінчується</option>
-      <option value="Немає в наявності">Немає в наявності</option>
-    </select>
-
-    <textarea
-      id="productDescription"
-      placeholder="Опис товару"></textarea>
+    <textarea id="productDescription" placeholder="Опис товару"></textarea>
 
     <label class="form-label">Фото товару</label>
+    <input type="file" id="productImageFile" accept="image/*">
 
-<input
-  type="file"
-  id="productImageFile"
-  accept="image/*">
+    <input type="hidden" id="productImage">
+    <div id="productImagePreview"></div>
 
-<input
-  type="hidden"
-  id="productImage">
-
-<div id="productImagePreview"></div>
-
-    <button
-      class="admin-main-btn"
-      onclick="saveProduct()">
-
+    <button type="button" class="admin-main-btn" onclick="saveProduct()">
       Зберегти товар
     </button>
 
   </div>
-
 </div>
 
 <script src="admin.js"></script>
