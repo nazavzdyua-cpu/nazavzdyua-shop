@@ -950,3 +950,29 @@ footer {
   transform:translateY(-2px);
   background:white;
 }
+.catalog-filters {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.filter-btn {
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1px solid rgba(107, 74, 53, 0.25);
+  background: rgba(255, 248, 242, 0.58);
+  color: #2b1d17;
+  cursor: pointer;
+  font-size: 15px;
+  backdrop-filter: blur(14px);
+  transition: 0.25s;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: #2b1d17;
+  color: white;
+  transform: translateY(-2px);
+}
