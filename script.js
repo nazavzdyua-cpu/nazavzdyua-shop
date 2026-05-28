@@ -38,12 +38,43 @@ async function loadCatalogProducts() {
     }
 
     allCatalogProducts = result.products || [];
-
     renderCatalogProducts();
 
   } catch (error) {
     grid.innerHTML = "<p>Не вдалося завантажити товари. Спробуйте оновити сторінку.</p>";
   }
+}
+
+function getStockInfo(product) {
+  const stock = Number(product.stock || 0);
+
+  if (stock <= 0) {
+    return {
+      stock,
+      status: "Немає в наявності",
+      isOut: true,
+      isLow: false,
+      label: "Немає в наявності"
+    };
+  }
+
+  if (stock <= 2) {
+    return {
+      stock,
+      status: "Закінчується",
+      isOut: false,
+      isLow: true,
+      label: `Закінчується • ${stock} шт`
+    };
+  }
+
+  return {
+    stock,
+    status: "В наявності",
+    isOut: false,
+    isLow: false,
+    label: `В наявності • ${stock} шт`
+  };
 }
 
 function renderCatalogProducts() {
@@ -63,8 +94,7 @@ function renderCatalogProducts() {
   }
 
   grid.innerHTML = products.map(product => {
-    const isOut = product.status === "Немає в наявності";
-    const isLow = product.status === "Закінчується";
+    const stockInfo = getStockInfo(product);
     const image = product.image_url || "images/logo.jpeg";
 
     return `
@@ -75,21 +105,19 @@ function renderCatalogProducts() {
             alt="${product.name}"
             onclick="openProductDetailsFromId(${product.id})">
 
-          ${
-            product.status
-              ? `<span class="catalog-status ${getCatalogStatusClass(product.status)}">${product.status}</span>`
-              : ""
-          }
+          <span class="catalog-status ${getCatalogStatusClass(stockInfo.status)}">
+            ${stockInfo.label}
+          </span>
         </div>
 
         <h3>${product.name}</h3>
         <p>${product.price} грн</p>
 
         ${
-          isOut
+          stockInfo.isOut
             ? `<button class="disabled-btn" disabled>Немає в наявності</button>`
             : `<button onclick="openItemModalFromId(${product.id})">
-                ${isLow ? "Замовити, поки є" : "Додати в корзину"}
+                ${stockInfo.isLow ? "Замовити, поки є" : "Додати в корзину"}
               </button>`
         }
       </div>
@@ -199,22 +227,27 @@ function openProductDetailsFromId(id) {
 
   if (!product) return;
 
+  const stockInfo = getStockInfo(product);
+
   detailProduct = product;
 
   document.getElementById("detailsModal").style.display = "block";
   document.getElementById("detailsImage").src = product.image_url || "images/logo.jpeg";
   document.getElementById("detailsTitle").innerText = product.name;
   document.getElementById("detailsPrice").innerText = `${product.price} грн`;
-  document.getElementById("detailsText").innerHTML = getDescription(product);
+  document.getElementById("detailsText").innerHTML = `
+    <p><strong>Статус:</strong> ${stockInfo.label}</p>
+    ${getDescription(product)}
+  `;
 
   const btn = document.getElementById("detailsCartBtn");
 
-  if (product.status === "Немає в наявності") {
+  if (stockInfo.isOut) {
     btn.innerText = "Немає в наявності";
     btn.disabled = true;
     btn.classList.add("disabled-btn");
   } else {
-    btn.innerText = product.status === "Закінчується"
+    btn.innerText = stockInfo.isLow
       ? "Замовити, поки є"
       : "Додати в корзину";
 
@@ -230,7 +263,9 @@ function closeDetailsModal() {
 function addDetailsProductToCart() {
   if (!detailProduct) return;
 
-  if (detailProduct.status === "Немає в наявності") return;
+  const stockInfo = getStockInfo(detailProduct);
+
+  if (stockInfo.isOut) return;
 
   closeDetailsModal();
   openItemModalFromId(detailProduct.id);
@@ -241,7 +276,11 @@ function addDetailsProductToCart() {
 function openItemModalFromId(id) {
   const product = getProductById(id);
 
-  if (!product || product.status === "Немає в наявності") return;
+  if (!product) return;
+
+  const stockInfo = getStockInfo(product);
+
+  if (stockInfo.isOut) return;
 
   openItemModal(product.name, product.price, product.image_url || "images/logo.jpeg");
 }
