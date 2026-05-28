@@ -35,7 +35,6 @@ function switchTab(tab) {
 
 async function loadOrders() {
   const ordersList = document.getElementById("ordersList");
-
   ordersList.innerHTML = "<p class='admin-loading'>Завантаження замовлень...</p>";
 
   try {
@@ -56,7 +55,6 @@ async function loadOrders() {
     }
 
     allOrders = result.orders || [];
-
     renderOrders();
 
   } catch (error) {
@@ -219,7 +217,6 @@ async function updateStatus(orderId, status) {
 
 async function loadProducts() {
   const productsList = document.getElementById("productsList");
-
   productsList.innerHTML = "<p class='admin-loading'>Завантаження товарів...</p>";
 
   try {
@@ -231,7 +228,6 @@ async function loadProducts() {
     }
 
     allProducts = result.products || [];
-
     renderProducts();
 
   } catch (error) {
@@ -251,50 +247,65 @@ function renderProducts() {
 
   productsList.innerHTML = `
     <div class="admin-products-grid">
-      ${allProducts.map(product => `
-        <div class="admin-product-card">
+      ${allProducts.map(product => {
+        const stock = Number(product.stock || 0);
+        const status = getAutoProductStatus(stock);
 
-          <div class="admin-product-image">
-            ${
-              product.image_url
-                ? `<img src="${product.image_url}" alt="">`
-                : `<div class="admin-product-placeholder">Фото немає</div>`
-            }
-          </div>
+        return `
+          <div class="admin-product-card">
 
-          <div class="admin-product-body">
-            <div class="admin-product-head">
-              <div>
-                <h3>${product.name}</h3>
-                <p>${product.price} грн</p>
+            <div class="admin-product-image">
+              ${
+                product.image_url
+                  ? `<img src="${product.image_url}" alt="">`
+                  : `<div class="admin-product-placeholder">Фото немає</div>`
+              }
+            </div>
+
+            <div class="admin-product-body">
+              <div class="admin-product-head">
+                <div>
+                  <h3>${product.name}</h3>
+                  <p>${product.price} грн</p>
+                </div>
+
+                <span class="product-status ${getProductStatusClass(status)}">
+                  ${status}
+                </span>
               </div>
 
-              <span class="product-status ${getProductStatusClass(product.status)}">
-                ${product.status}
-              </span>
+              <p class="admin-product-category">
+                ${getCategoryName(product.category)}
+              </p>
+
+              <p class="admin-product-description">
+                ${product.description || "Опис не додано"}
+              </p>
+
+              <div class="admin-stock-box">
+                <span>Кількість:</span>
+
+                <button onclick="changeStock(${product.id}, -1)">−</button>
+
+                <strong>${stock} шт</strong>
+
+                <button onclick="changeStock(${product.id}, 1)">+</button>
+              </div>
+
+              <div class="admin-product-actions">
+                <button class="admin-main-btn small" onclick="openProductModal(${product.id})">
+                  Редагувати
+                </button>
+
+                <button class="admin-delete-btn" onclick="deleteProduct(${product.id})">
+                  Видалити
+                </button>
+              </div>
             </div>
 
-            <p class="admin-product-category">
-              ${getCategoryName(product.category)}
-            </p>
-
-            <p class="admin-product-description">
-              ${product.description || "Опис не додано"}
-            </p>
-
-            <div class="admin-product-actions">
-              <button class="admin-main-btn small" onclick="openProductModal(${product.id})">
-                Редагувати
-              </button>
-
-              <button class="admin-delete-btn" onclick="deleteProduct(${product.id})">
-                Видалити
-              </button>
-            </div>
           </div>
-
-        </div>
-      `).join("")}
+        `;
+      }).join("")}
     </div>
   `;
 }
@@ -305,6 +316,9 @@ function openProductModal(productId = null) {
   const modal = document.getElementById("productModal");
   const title = document.getElementById("productModalTitle");
 
+  const fileInput = document.getElementById("productImageFile");
+  if (fileInput) fileInput.value = "";
+
   if (productId) {
     const product = allProducts.find(item => item.id === productId);
 
@@ -314,25 +328,25 @@ function openProductModal(productId = null) {
 
     document.getElementById("productName").value = product.name || "";
     document.getElementById("productPrice").value = product.price || "";
+    document.getElementById("productStock").value = product.stock ?? 0;
     document.getElementById("productCategory").value = product.category || "medalions";
     document.getElementById("productDescriptionType").value = product.description_type || "medalion";
-    document.getElementById("productStatus").value = product.status || "В наявності";
-    document.getElementById("productStock").value = product.stock ?? 1;
     document.getElementById("productDescription").value = product.description || "";
     document.getElementById("productImage").value = product.image_url || "";
+
     document.getElementById("productImagePreview").innerHTML =
-  product.image_url
-    ? `<img src="${product.image_url}" style="width:120px;height:120px;object-fit:cover;border-radius:18px;margin-top:12px;">`
-    : "";
+      product.image_url
+        ? `<img src="${product.image_url}" style="width:120px;height:120px;object-fit:cover;border-radius:18px;margin-top:12px;">`
+        : "";
+
   } else {
     title.innerText = "Новий товар";
 
     document.getElementById("productName").value = "";
     document.getElementById("productPrice").value = "";
+    document.getElementById("productStock").value = 1;
     document.getElementById("productCategory").value = "medalions";
     document.getElementById("productDescriptionType").value = "medalion";
-    document.getElementById("productStatus").value = "В наявності";
-    document.getElementById("productStock").value = 1;
     document.getElementById("productDescription").value = "";
     document.getElementById("productImage").value = "";
     document.getElementById("productImagePreview").innerHTML = "";
@@ -349,83 +363,112 @@ function closeProductModal() {
 async function saveProduct() {
   const name = document.getElementById("productName").value.trim();
   const price = document.getElementById("productPrice").value;
+  const stock = Number(document.getElementById("productStock").value || 0);
   const category = document.getElementById("productCategory").value;
   const description_type = document.getElementById("productDescriptionType").value;
-  const stock = Number(document.getElementById("productStock").value || 0);
-
-let status = "В наявності";
-
-if (stock <= 0) {
-  status = "Немає в наявності";
-} else if (stock <= 2) {
-  status = "Закінчується";
-}
   const description = document.getElementById("productDescription").value.trim();
+
   let image_url = document.getElementById("productImage").value.trim();
 
-const fileInput = document.getElementById("productImageFile");
-const selectedFile = fileInput.files[0];
-  if (selectedFile) {
+  const fileInput = document.getElementById("productImageFile");
+  const selectedFile = fileInput ? fileInput.files[0] : null;
 
-  const base64 = await fileToBase64(selectedFile);
-
-  const uploadRes = await fetch("/.netlify/functions/product-upload", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      password: adminPassword,
-      fileBase64: base64,
-      fileName: selectedFile.name,
-      fileType: selectedFile.type
-    })
-  });
-
-  const uploadData = await uploadRes.json();
-
-  if (!uploadRes.ok || !uploadData.success) {
-    throw new Error(uploadData.error || "Помилка завантаження фото");
-  }
-
-  image_url = uploadData.image_url;
-
-  document.getElementById("productImage").value = image_url;
-}
   if (!name || !price) {
     alert("Вкажіть назву і ціну товару");
     return;
   }
 
   try {
-    const response = await fetch("/.netlify/functions/product-save", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        password: adminPassword,
-        id: editingProductId,
-        name,
-        price,
-        category,
-        description_type,
-        status,
-        stock,
-        description,
-        image_url,
-        image_path: "",
-        sort_order: editingProductId ? getProductSortOrder(editingProductId) : allProducts.length + 1
-      })
-    });
+    if (selectedFile) {
+      const base64 = await fileToBase64(selectedFile);
 
-    const result = await response.json();
+      const uploadRes = await fetch("/.netlify/functions/product-upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          password: adminPassword,
+          fileBase64: base64,
+          fileName: selectedFile.name,
+          fileType: selectedFile.type
+        })
+      });
 
-    if (!response.ok || !result.success) {
-      throw new Error("Не вдалося зберегти товар");
+      const uploadData = await uploadRes.json();
+
+      if (!uploadRes.ok || !uploadData.success) {
+        throw new Error(uploadData.error || "Помилка завантаження фото");
+      }
+
+      image_url = uploadData.image_url;
+      document.getElementById("productImage").value = image_url;
     }
 
+    await saveProductData({
+      id: editingProductId,
+      name,
+      price,
+      stock,
+      category,
+      description_type,
+      description,
+      image_url,
+      image_path: "",
+      sort_order: editingProductId ? getProductSortOrder(editingProductId) : allProducts.length + 1
+    });
+
     closeProductModal();
+    await loadProducts();
+
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+async function saveProductData(productData) {
+  const response = await fetch("/.netlify/functions/product-save", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      password: adminPassword,
+      ...productData
+    })
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success) {
+    throw new Error("Не вдалося зберегти товар");
+  }
+
+  return result.product;
+}
+
+async function changeStock(productId, amount) {
+  const product = allProducts.find(item => item.id === productId);
+
+  if (!product) return;
+
+  const currentStock = Number(product.stock || 0);
+  const newStock = Math.max(currentStock + amount, 0);
+
+  try {
+    await saveProductData({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      stock: newStock,
+      category: product.category,
+      description_type: product.description_type,
+      description: product.description || "",
+      image_url: product.image_url || "",
+      image_path: product.image_path || "",
+      sort_order: product.sort_order || 0
+    });
+
     await loadProducts();
 
   } catch (error) {
@@ -463,6 +506,16 @@ async function deleteProduct(productId) {
   }
 }
 
+/* HELPERS */
+
+function getAutoProductStatus(stock) {
+  const amount = Number(stock || 0);
+
+  if (amount <= 0) return "Немає в наявності";
+  if (amount <= 2) return "Закінчується";
+  return "В наявності";
+}
+
 function getProductSortOrder(productId) {
   const product = allProducts.find(item => item.id === productId);
   return product ? product.sort_order : 0;
@@ -481,8 +534,6 @@ function getProductStatusClass(status) {
   if (status === "Немає в наявності") return "product-out";
   return "";
 }
-
-/* HELPERS */
 
 function getStatusClass(status) {
   if (status === "Нове") return "status-new";
@@ -503,6 +554,7 @@ function formatDate(dateString) {
     minute: "2-digit"
   });
 }
+
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
