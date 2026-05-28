@@ -1,49 +1,72 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NAZAVZDY.UA — Адмінка</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NAZAVZDY.UA — Кабінет</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="admin-page">
 
-<section class="page-hero">
+<button class="menu-btn" onclick="toggleAdminMenu()">☰</button>
+
+<div class="menu-overlay" id="menuOverlay" onclick="closeAdminMenu()"></div>
+
+<nav class="side-menu" id="sideMenu">
+  <button class="menu-close" onclick="closeAdminMenu()">×</button>
+  <p class="menu-brand">NAZAVZDY.UA</p>
+
+  <a href="index.html">Головна</a>
+  <a href="catalog.html">Каталог</a>
+  <a href="how.html">Як замовити</a>
+  <a href="about.html">Про нас</a>
+  <a href="contacts.html">Контакти</a>
+  <a href="admin.html" class="active">Вхід</a>
+</nav>
+
+<section class="admin-hero">
   <p class="brand-small">NAZAVZDY.UA</p>
-  <h1>Панель замовлень</h1>
-  <p>Всі замовлення в одному місці</p>
+  <h1>Кабінет замовлень</h1>
+  <p>Перегляд, статуси та файли замовлень</p>
 </section>
 
-<section class="section">
+<section class="admin-section">
 
-<div class="glass-card admin-login" id="loginBox">
+  <div class="admin-login-card" id="loginBox">
+    <h2>Вхід в акаунт</h2>
+    <p>Введіть пароль, щоб переглядати замовлення.</p>
 
-<h2>Вхід</h2>
+    <input type="password" id="adminPassword" placeholder="Пароль">
 
-<input
-type="password"
-id="adminPassword"
-placeholder="Пароль">
+    <button class="admin-main-btn" onclick="loginAdmin()">
+      Увійти
+    </button>
+  </div>
 
-<button onclick="loginAdmin()">
-Увійти
-</button>
+  <div id="ordersBox" style="display:none;">
 
-</div>
+    <div class="admin-dashboard-head">
+      <div>
+        <h2>Замовлення</h2>
+        <p>Найновіші замовлення відображаються першими</p>
+      </div>
 
-<div id="ordersBox" style="display:none;">
+      <button class="admin-light-btn" onclick="loadOrders()">
+        Оновити
+      </button>
+    </div>
 
-<div class="admin-top">
-<h2>Замовлення</h2>
+    <div class="admin-search-box">
+      <input
+        type="text"
+        id="orderSearch"
+        placeholder="Пошук за номером, імʼям або телефоном"
+        oninput="renderOrders()">
+    </div>
 
-<button class="btn-light" onclick="loadOrders()">
-Оновити
-</button>
-</div>
+    <div id="ordersList"></div>
 
-<div id="ordersList"></div>
-
-</div>
+  </div>
 
 </section>
 
