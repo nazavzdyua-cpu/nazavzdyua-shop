@@ -1609,3 +1609,19 @@ footer {
 #detailsCartBtn.disabled-btn:hover {
   transform: none;
 }
+.products-grid .card {
+  display: flex;
+  flex-direction: column;
+}
+
+.products-grid .card h3 {
+  min-height: 58px;
+}
+
+.products-grid .card p {
+  margin-top: auto;
+}
+
+.products-grid .card button {
+  margin-top: 18px;
+}
