@@ -976,3 +976,33 @@ footer {
   color: white;
   transform: translateY(-2px);
 }
+.card img {
+  cursor: pointer;
+}
+
+.product-details #detailsText {
+  text-align: left;
+  line-height: 1.7;
+  color: #3f2d24;
+  margin: 18px 0 24px;
+}
+
+.product-details #detailsText p {
+  margin: 10px 0;
+}
+
+.product-details #detailsText ul {
+  padding-left: 20px;
+  margin: 14px 0;
+}
+
+.product-details #detailsText li {
+  margin-bottom: 8px;
+}
+
+#detailsPrice,
+#itemPrice {
+  font-size: 19px;
+  font-weight: 700;
+  color: #5f4637;
+}
