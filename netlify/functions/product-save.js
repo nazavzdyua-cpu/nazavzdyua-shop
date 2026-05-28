@@ -22,17 +22,28 @@ exports.handler = async function(event) {
     const SUPABASE_URL = process.env.SUPABASE_URL;
     const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    const productData = {
-      name: data.name,
-      price: Number(data.price),
-      category: data.category,
-      description_type: data.description_type,
-      description: data.description || "",
-      image_url: data.image_url || "",
-      image_path: data.image_path || "",
-      status: data.status || "В наявності",
-      sort_order: Number(data.sort_order || 0)
-    };
+    const stock = Number(data.stock || 0);
+
+let status = "В наявності";
+
+if (stock <= 0) {
+  status = "Немає в наявності";
+} else if (stock <= 2) {
+  status = "Закінчується";
+}
+
+const productData = {
+  name: data.name,
+  price: Number(data.price),
+  category: data.category,
+  description_type: data.description_type,
+  description: data.description || "",
+  image_url: data.image_url || "",
+  image_path: data.image_path || "",
+  status,
+  stock,
+  sort_order: Number(data.sort_order || 0)
+};
 
     let response;
 
