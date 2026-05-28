@@ -1,5 +1,6 @@
 let cart = [];
 let currentProduct = null;
+let detailProduct = null;
 
 function toggleMenu() {
   document.getElementById('sideMenu')?.classList.toggle('active');
@@ -9,6 +10,66 @@ function toggleMenu() {
 function closeMenu() {
   document.getElementById('sideMenu')?.classList.remove('active');
   document.getElementById('menuOverlay')?.classList.remove('active');
+}
+
+function getDescription(type) {
+  if (type === 'medalion') {
+    return `
+      <p><strong>Ваш спогад — завжди поруч.</strong></p>
+      <p>Медальйон створений для моментів, які хочеться зберегти назавжди. Усередині може бути <strong>1–2 фото</strong>, або поєднання фото з важливою датою чи текстом.</p>
+      <ul>
+        <li>У комплекті — підвіска універсальної довжини</li>
+        <li>Срібне покриття 925 проби</li>
+        <li>Матеріал — нержавіюча ювелірна сталь</li>
+        <li>Термін виготовлення — 2–3 дні</li>
+      </ul>
+      <p><strong>Передоплата:</strong> повна вартість замовлення, оскільки кожна прикраса виготовляється індивідуально.</p>
+    `;
+  }
+
+  if (type === 'ring') {
+    return `
+      <p><strong>Прикраса зі змістом та особистою історією.</strong></p>
+      <p>Каблучка може містити <strong>1–2 фото</strong>, або фото разом із текстом чи датою, щоб найважливіше завжди було поруч.</p>
+      <ul>
+        <li>Розмір регулюється під будь-який палець</li>
+        <li>Матеріал — нержавіюча ювелірна сталь</li>
+        <li>Термін виготовлення — 2–3 дні</li>
+      </ul>
+      <p><strong>Передоплата:</strong> повна вартість замовлення, оскільки виріб створюється індивідуально.</p>
+    `;
+  }
+
+  return `
+    <p><strong>Невеликий аксесуар із великим змістом.</strong></p>
+    <p>Брелок може містити <strong>1 фото</strong>, а також текст, логотип або марку авто — те, що має особливе значення саме для вас.</p>
+    <ul>
+      <li>Підходить для ключів, сумок та інших аксесуарів</li>
+      <li>Термін виготовлення — 2–3 дні</li>
+    </ul>
+    <p><strong>Передоплата:</strong> повна вартість замовлення, оскільки кожне замовлення індивідуальне.</p>
+  `;
+}
+
+function openProductDetails(product, price, image, type) {
+  detailProduct = { product, price: Number(price), image };
+
+  document.getElementById('detailsModal').style.display = 'block';
+  document.getElementById('detailsImage').src = image;
+  document.getElementById('detailsTitle').innerText = product;
+  document.getElementById('detailsPrice').innerText = `${price} грн`;
+  document.getElementById('detailsText').innerHTML = getDescription(type);
+}
+
+function closeDetailsModal() {
+  document.getElementById('detailsModal').style.display = 'none';
+}
+
+function addDetailsProductToCart() {
+  if (!detailProduct) return;
+
+  closeDetailsModal();
+  openItemModal(detailProduct.product, detailProduct.price, detailProduct.image);
 }
 
 function openItemModal(product, price, image) {
@@ -140,7 +201,6 @@ function renderCart() {
         <p>${item.photoCount} фото</p>
         <p>${item.file ? item.file.name : 'Файл не додано'}</p>
       </div>
-
       <button onclick="removeCartItem(${index})">×</button>
     </div>
   `).join('');
@@ -199,10 +259,7 @@ function fileToBase64(file) {
 
     const reader = new FileReader();
 
-    reader.onload = () => {
-      resolve(reader.result.split(',')[1]);
-    };
-
+    reader.onload = () => resolve(reader.result.split(',')[1]);
     reader.onerror = reject;
 
     reader.readAsDataURL(file);
@@ -243,15 +300,11 @@ async function confirmAndSendOrder() {
   try {
     const response = await fetch('/.netlify/functions/order', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(orderData)
     });
 
-    if (!response.ok) {
-      throw new Error('Помилка відправки');
-    }
+    if (!response.ok) throw new Error('Помилка відправки');
 
     closeConfirmModal();
     closeCart();
@@ -273,6 +326,7 @@ async function confirmAndSendOrder() {
 function closeThanksModal() {
   document.getElementById('thanksModal').style.display = 'none';
 }
+
 function filterProducts(category, button) {
   const cards = document.querySelectorAll('.card');
   const buttons = document.querySelectorAll('.filter-btn');
