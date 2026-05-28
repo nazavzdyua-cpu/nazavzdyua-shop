@@ -1,37 +1,157 @@
 let cart = [];
 let currentProduct = null;
 let detailProduct = null;
+let allCatalogProducts = [];
+let currentFilter = "all";
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadCatalogProducts();
+});
+
+/* MENU */
 
 function toggleMenu() {
-  document.getElementById('sideMenu')?.classList.toggle('active');
-  document.getElementById('menuOverlay')?.classList.toggle('active');
+  document.getElementById("sideMenu")?.classList.toggle("active");
+  document.getElementById("menuOverlay")?.classList.toggle("active");
 }
 
 function closeMenu() {
-  document.getElementById('sideMenu')?.classList.remove('active');
-  document.getElementById('menuOverlay')?.classList.remove('active');
+  document.getElementById("sideMenu")?.classList.remove("active");
+  document.getElementById("menuOverlay")?.classList.remove("active");
 }
 
-function getDescription(type) {
-  if (type === 'medalion') {
+/* CATALOG */
+
+async function loadCatalogProducts() {
+  const grid = document.getElementById("productsGrid");
+
+  if (!grid) return;
+
+  grid.innerHTML = "<p>Завантаження товарів...</p>";
+
+  try {
+    const response = await fetch("/.netlify/functions/products-list");
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error("Не вдалося завантажити товари");
+    }
+
+    allCatalogProducts = result.products || [];
+
+    renderCatalogProducts();
+
+  } catch (error) {
+    grid.innerHTML = "<p>Не вдалося завантажити товари. Спробуйте оновити сторінку.</p>";
+  }
+}
+
+function renderCatalogProducts() {
+  const grid = document.getElementById("productsGrid");
+
+  if (!grid) return;
+
+  let products = [...allCatalogProducts];
+
+  if (currentFilter !== "all") {
+    products = products.filter(product => product.category === currentFilter);
+  }
+
+  if (products.length === 0) {
+    grid.innerHTML = "<p>У цій категорії поки немає товарів.</p>";
+    return;
+  }
+
+  grid.innerHTML = products.map(product => {
+    const isOut = product.status === "Немає в наявності";
+    const isLow = product.status === "Закінчується";
+    const image = product.image_url || "images/logo.jpeg";
+
     return `
-      <p><strong>Ваш спогад — завжди поруч.</strong></p>
-      <p>Медальйон створений для моментів, які хочеться зберегти назавжди. Усередині може бути <strong>1–2 фото</strong>, або поєднання фото з важливою датою чи текстом.</p>
+      <div class="card" data-category="${product.category}">
+        <div class="product-image-wrap">
+          <img
+            src="${image}"
+            alt="${product.name}"
+            onclick="openProductDetailsFromId(${product.id})">
+
+          ${
+            product.status
+              ? `<span class="catalog-status ${getCatalogStatusClass(product.status)}">${product.status}</span>`
+              : ""
+          }
+        </div>
+
+        <h3>${product.name}</h3>
+        <p>${product.price} грн</p>
+
+        ${
+          isOut
+            ? `<button class="disabled-btn" disabled>Немає в наявності</button>`
+            : `<button onclick="openItemModalFromId(${product.id})">
+                ${isLow ? "Замовити, поки є" : "Додати в корзину"}
+              </button>`
+        }
+      </div>
+    `;
+  }).join("");
+}
+
+function filterProducts(category, button) {
+  currentFilter = category;
+
+  const buttons = document.querySelectorAll(".filter-btn");
+  buttons.forEach(btn => btn.classList.remove("active"));
+
+  if (button) {
+    button.classList.add("active");
+  }
+
+  renderCatalogProducts();
+}
+
+function getCatalogStatusClass(status) {
+  if (status === "В наявності") return "catalog-available";
+  if (status === "Закінчується") return "catalog-low";
+  if (status === "Немає в наявності") return "catalog-out";
+  return "";
+}
+
+function getProductById(id) {
+  return allCatalogProducts.find(product => Number(product.id) === Number(id));
+}
+
+/* DETAILS */
+
+function getDescription(product) {
+  if (product.description && product.description.trim()) {
+    return `
+      <p>${product.description}</p>
+      ${getDefaultDescriptionExtra(product.description_type)}
+    `;
+  }
+
+  return getDefaultDescription(product.description_type);
+}
+
+function getDefaultDescriptionExtra(type) {
+  if (type === "medalion") {
+    return `
       <ul>
+        <li>Може містити 1–2 фото, текст або дату</li>
         <li>У комплекті — підвіска універсальної довжини</li>
         <li>Срібне покриття 925 проби</li>
         <li>Матеріал — нержавіюча ювелірна сталь</li>
         <li>Термін виготовлення — 2–3 дні</li>
       </ul>
-      <p><strong>Передоплата:</strong> повна вартість замовлення, оскільки кожна прикраса виготовляється індивідуально.</p>
+      <p><strong>Передоплата:</strong> повна вартість замовлення, оскільки прикраса виготовляється індивідуально.</p>
     `;
   }
 
-  if (type === 'ring') {
+  if (type === "ring") {
     return `
-      <p><strong>Прикраса зі змістом та особистою історією.</strong></p>
-      <p>Каблучка може містити <strong>1–2 фото</strong>, або фото разом із текстом чи датою, щоб найважливіше завжди було поруч.</p>
       <ul>
+        <li>Може містити 1–2 фото, текст або дату</li>
         <li>Розмір регулюється під будь-який палець</li>
         <li>Матеріал — нержавіюча ювелірна сталь</li>
         <li>Термін виготовлення — 2–3 дні</li>
@@ -41,9 +161,8 @@ function getDescription(type) {
   }
 
   return `
-    <p><strong>Невеликий аксесуар із великим змістом.</strong></p>
-    <p>Брелок може містити <strong>1 фото</strong>, а також текст, логотип або марку авто — те, що має особливе значення саме для вас.</p>
     <ul>
+      <li>Може містити 1 фото, текст, логотип або марку авто</li>
       <li>Підходить для ключів, сумок та інших аксесуарів</li>
       <li>Термін виготовлення — 2–3 дні</li>
     </ul>
@@ -51,25 +170,80 @@ function getDescription(type) {
   `;
 }
 
-function openProductDetails(product, price, image, type) {
-  detailProduct = { product, price: Number(price), image };
+function getDefaultDescription(type) {
+  if (type === "medalion") {
+    return `
+      <p><strong>Ваш спогад — завжди поруч.</strong></p>
+      <p>Медальйон створений для моментів, які хочеться зберегти назавжди.</p>
+      ${getDefaultDescriptionExtra("medalion")}
+    `;
+  }
 
-  document.getElementById('detailsModal').style.display = 'block';
-  document.getElementById('detailsImage').src = image;
-  document.getElementById('detailsTitle').innerText = product;
-  document.getElementById('detailsPrice').innerText = `${price} грн`;
-  document.getElementById('detailsText').innerHTML = getDescription(type);
+  if (type === "ring") {
+    return `
+      <p><strong>Прикраса зі змістом та особистою історією.</strong></p>
+      <p>Каблучка допомагає зберегти найважливіше поруч.</p>
+      ${getDefaultDescriptionExtra("ring")}
+    `;
+  }
+
+  return `
+    <p><strong>Невеликий аксесуар із великим змістом.</strong></p>
+    <p>Брелок може стати особистим символом або памʼятним подарунком.</p>
+    ${getDefaultDescriptionExtra("keychain")}
+  `;
+}
+
+function openProductDetailsFromId(id) {
+  const product = getProductById(id);
+
+  if (!product) return;
+
+  detailProduct = product;
+
+  document.getElementById("detailsModal").style.display = "block";
+  document.getElementById("detailsImage").src = product.image_url || "images/logo.jpeg";
+  document.getElementById("detailsTitle").innerText = product.name;
+  document.getElementById("detailsPrice").innerText = `${product.price} грн`;
+  document.getElementById("detailsText").innerHTML = getDescription(product);
+
+  const btn = document.getElementById("detailsCartBtn");
+
+  if (product.status === "Немає в наявності") {
+    btn.innerText = "Немає в наявності";
+    btn.disabled = true;
+    btn.classList.add("disabled-btn");
+  } else {
+    btn.innerText = product.status === "Закінчується"
+      ? "Замовити, поки є"
+      : "Додати в корзину";
+
+    btn.disabled = false;
+    btn.classList.remove("disabled-btn");
+  }
 }
 
 function closeDetailsModal() {
-  document.getElementById('detailsModal').style.display = 'none';
+  document.getElementById("detailsModal").style.display = "none";
 }
 
 function addDetailsProductToCart() {
   if (!detailProduct) return;
 
+  if (detailProduct.status === "Немає в наявності") return;
+
   closeDetailsModal();
-  openItemModal(detailProduct.product, detailProduct.price, detailProduct.image);
+  openItemModalFromId(detailProduct.id);
+}
+
+/* ITEM MODAL */
+
+function openItemModalFromId(id) {
+  const product = getProductById(id);
+
+  if (!product || product.status === "Немає в наявності") return;
+
+  openItemModal(product.name, product.price, product.image_url || "images/logo.jpeg");
 }
 
 function openItemModal(product, price, image) {
@@ -79,25 +253,25 @@ function openItemModal(product, price, image) {
     image
   };
 
-  document.getElementById('itemModal').style.display = 'block';
-  document.getElementById('itemImage').src = image;
-  document.getElementById('itemTitle').innerText = product;
-  document.getElementById('itemPrice').innerText = `${price} грн`;
-  document.getElementById('itemQuantity').value = 1;
+  document.getElementById("itemModal").style.display = "block";
+  document.getElementById("itemImage").src = image;
+  document.getElementById("itemTitle").innerText = product;
+  document.getElementById("itemPrice").innerText = `${price} грн`;
+  document.getElementById("itemQuantity").value = 1;
 
   renderUnitFields();
 }
 
 function closeItemModal() {
-  document.getElementById('itemModal').style.display = 'none';
+  document.getElementById("itemModal").style.display = "none";
 }
 
 function renderUnitFields() {
-  const quantity = Number(document.getElementById('itemQuantity').value) || 1;
-  const container = document.getElementById('unitFields');
-  const isKeychain = currentProduct?.product?.toLowerCase().includes('брелок');
+  const quantity = Number(document.getElementById("itemQuantity").value) || 1;
+  const container = document.getElementById("unitFields");
+  const isKeychain = currentProduct?.product?.toLowerCase().includes("брелок");
 
-  container.innerHTML = '';
+  container.innerHTML = "";
 
   for (let i = 1; i <= quantity; i++) {
     container.innerHTML += `
@@ -131,12 +305,12 @@ function renderUnitFields() {
   }
 }
 
-document.getElementById('itemQuantity')?.addEventListener('input', renderUnitFields);
+document.getElementById("itemQuantity")?.addEventListener("input", renderUnitFields);
 
 function addCurrentToCart() {
-  const photoCounts = document.querySelectorAll('.unit-photo-count');
-  const files = document.querySelectorAll('.unit-file');
-  const comments = document.querySelectorAll('.unit-comment');
+  const photoCounts = document.querySelectorAll(".unit-photo-count");
+  const files = document.querySelectorAll(".unit-file");
+  const comments = document.querySelectorAll(".unit-comment");
 
   for (let i = 0; i < photoCounts.length; i++) {
     const photoCount = Number(photoCounts[i].value) || 1;
@@ -157,18 +331,20 @@ function addCurrentToCart() {
   openCart();
 }
 
+/* CART */
+
 function updateCartButton() {
-  const count = document.getElementById('cartCount');
+  const count = document.getElementById("cartCount");
   if (count) count.innerText = cart.length;
 }
 
 function openCart() {
-  document.getElementById('cartPanel').classList.add('active');
+  document.getElementById("cartPanel").classList.add("active");
   renderCart();
 }
 
 function closeCart() {
-  document.getElementById('cartPanel').classList.remove('active');
+  document.getElementById("cartPanel").classList.remove("active");
 }
 
 function removeCartItem(index) {
@@ -182,8 +358,8 @@ function getCartTotal() {
 }
 
 function renderCart() {
-  const cartItems = document.getElementById('cartItems');
-  const cartTotal = document.getElementById('cartTotal');
+  const cartItems = document.getElementById("cartItems");
+  const cartTotal = document.getElementById("cartTotal");
 
   if (!cartItems || !cartTotal) return;
 
@@ -199,30 +375,33 @@ function renderCart() {
         <strong>${item.product}</strong>
         <p>${item.price} грн</p>
         <p>${item.photoCount} фото</p>
-        <p>${item.file ? item.file.name : 'Файл не додано'}</p>
+        <p>${item.file ? item.file.name : "Файл не додано"}</p>
       </div>
+
       <button onclick="removeCartItem(${index})">×</button>
     </div>
-  `).join('');
+  `).join("");
 
   cartTotal.innerText = `${getCartTotal()} грн`;
 }
 
+/* ORDER */
+
 function openConfirmOrder() {
-  const name = document.getElementById('customerName').value.trim();
-  const phone = document.getElementById('customerPhone').value.trim();
+  const name = document.getElementById("customerName").value.trim();
+  const phone = document.getElementById("customerPhone").value.trim();
 
   if (!name || !phone) {
-    alert('Вкажіть імʼя та номер телефону');
+    alert("Вкажіть імʼя та номер телефону");
     return;
   }
 
   if (cart.length === 0) {
-    alert('Корзина порожня');
+    alert("Корзина порожня");
     return;
   }
 
-  const confirmContent = document.getElementById('confirmContent');
+  const confirmContent = document.getElementById("confirmContent");
 
   confirmContent.innerHTML = `
     <p><strong>Імʼя:</strong> ${name}</p>
@@ -235,19 +414,19 @@ function openConfirmOrder() {
         <strong>${index + 1}. ${item.product}</strong>
         <p>Ціна: ${item.price} грн</p>
         <p>Кількість фото: ${item.photoCount}</p>
-        <p>Файл: ${item.file ? item.file.name : 'Не додано'}</p>
-        <p>Коментар: ${item.comment || 'Без коментаря'}</p>
+        <p>Файл: ${item.file ? item.file.name : "Не додано"}</p>
+        <p>Коментар: ${item.comment || "Без коментаря"}</p>
       </div>
-    `).join('')}
+    `).join("")}
 
     <h3>Загальна сума: ${getCartTotal()} грн</h3>
   `;
 
-  document.getElementById('confirmModal').style.display = 'block';
+  document.getElementById("confirmModal").style.display = "block";
 }
 
 function closeConfirmModal() {
-  document.getElementById('confirmModal').style.display = 'none';
+  document.getElementById("confirmModal").style.display = "none";
 }
 
 function fileToBase64(file) {
@@ -259,7 +438,7 @@ function fileToBase64(file) {
 
     const reader = new FileReader();
 
-    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onload = () => resolve(reader.result.split(",")[1]);
     reader.onerror = reject;
 
     reader.readAsDataURL(file);
@@ -267,10 +446,10 @@ function fileToBase64(file) {
 }
 
 async function confirmAndSendOrder() {
-  const confirmBtn = document.getElementById('confirmSendBtn');
+  const confirmBtn = document.getElementById("confirmSendBtn");
 
   confirmBtn.disabled = true;
-  confirmBtn.innerText = 'Відправляємо...';
+  confirmBtn.innerText = "Відправляємо...";
 
   const items = [];
 
@@ -282,48 +461,50 @@ async function confirmAndSendOrder() {
       price: item.price,
       photoCount: item.photoCount,
       comment: item.comment,
-      fileName: item.file ? item.file.name : '',
-      fileType: item.file ? item.file.type : '',
+      fileName: item.file ? item.file.name : "",
+      fileType: item.file ? item.file.type : "",
       fileBase64
     });
   }
 
   const orderData = {
     customer: {
-      name: document.getElementById('customerName').value,
-      phone: document.getElementById('customerPhone').value
+      name: document.getElementById("customerName").value,
+      phone: document.getElementById("customerPhone").value
     },
     items,
     total: getCartTotal()
   };
 
   try {
-    const response = await fetch('/.netlify/functions/order', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const response = await fetch("/.netlify/functions/order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify(orderData)
     });
 
     const result = await response.json();
 
     if (!response.ok || !result.success) {
-      throw new Error('Помилка відправки');
+      throw new Error("Помилка відправки");
     }
 
     closeConfirmModal();
     closeCart();
 
-    document.getElementById('thanksModal').style.display = 'block';
+    document.getElementById("thanksModal").style.display = "block";
 
-    const thanksTitle = document.querySelector('#thanksModal h2');
-    const thanksText = document.querySelector('#thanksModal .wide-text');
+    const thanksTitle = document.querySelector("#thanksModal h2");
+    const thanksText = document.querySelector("#thanksModal .wide-text");
 
     if (thanksTitle) {
       thanksTitle.innerText = `Дякуємо за замовлення №${result.orderId}!`;
     }
 
     if (thanksText) {
-      thanksText.innerText = 'Найближчим часом ми з вами звʼяжемось.';
+      thanksText.innerText = "Найближчим часом ми з вами звʼяжемось.";
     }
 
     cart = [];
@@ -331,32 +512,13 @@ async function confirmAndSendOrder() {
     renderCart();
 
   } catch (error) {
-    alert('Сталася помилка. Спробуйте ще раз або напишіть нам в Instagram.');
+    alert("Сталася помилка. Спробуйте ще раз або напишіть нам в Instagram.");
   }
 
   confirmBtn.disabled = false;
-  confirmBtn.innerText = 'Підтвердити замовлення';
+  confirmBtn.innerText = "Підтвердити замовлення";
 }
 
 function closeThanksModal() {
-  document.getElementById('thanksModal').style.display = 'none';
-}
-
-function filterProducts(category, button) {
-  const cards = document.querySelectorAll('.card');
-  const buttons = document.querySelectorAll('.filter-btn');
-
-  buttons.forEach(btn => btn.classList.remove('active'));
-  button.classList.add('active');
-
-  cards.forEach(card => {
-    const cardCategory = card.getAttribute('data-category');
-
-    if (category === 'all' || cardCategory === category) {
-      card.style.display = 'block';
-      card.style.animation = 'fadeUp 0.35s ease';
-    } else {
-      card.style.display = 'none';
-    }
-  });
+  document.getElementById("thanksModal").style.display = "none";
 }
