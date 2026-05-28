@@ -3,40 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NAZAVZDY.UA — Кабінет</title>
+  <title>NAZAVZDY.UA — Адмінка</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="admin-page">
+<body>
 
-<button class="menu-btn" onclick="toggleAdminMenu()">☰</button>
-
-<div class="menu-overlay" id="menuOverlay" onclick="closeAdminMenu()"></div>
-
-<nav class="side-menu" id="sideMenu">
-  <button class="menu-close" onclick="closeAdminMenu()">×</button>
-  <p class="menu-brand">NAZAVZDY.UA</p>
-
-  <a href="index.html">Головна</a>
-  <a href="catalog.html">Каталог</a>
-  <a href="how.html">Як замовити</a>
-  <a href="about.html">Про нас</a>
-  <a href="contacts.html">Контакти</a>
-  <a href="admin.html" class="active">Вхід</a>
-</nav>
-
-<section class="admin-hero">
+<section class="page-hero admin-hero">
   <p class="brand-small">NAZAVZDY.UA</p>
   <h1>Кабінет замовлень</h1>
-  <p>Перегляд, статуси та файли замовлень</p>
+  <p>Перегляд замовлень, файлів клієнтів та зміна статусів.</p>
 </section>
 
-<section class="admin-section">
+<section class="section admin-section">
 
   <div class="admin-login-card" id="loginBox">
     <h2>Вхід в акаунт</h2>
-    <p>Введіть пароль, щоб переглядати замовлення.</p>
+    <p>Введіть пароль адміністратора</p>
 
-    <input type="password" id="adminPassword" placeholder="Пароль">
+    <input
+      type="password"
+      id="adminPassword"
+      placeholder="Пароль">
 
     <button class="admin-main-btn" onclick="loginAdmin()">
       Увійти
@@ -45,24 +32,34 @@
 
   <div id="ordersBox" style="display:none;">
 
-    <div class="admin-dashboard-head">
+    <div class="admin-toolbar">
       <div>
         <h2>Замовлення</h2>
-        <p>Найновіші замовлення відображаються першими</p>
+        <p>Всі заявки з сайту</p>
       </div>
 
-      <button class="admin-light-btn" onclick="loadOrders()">
+      <button class="admin-main-btn small" onclick="loadOrders()">
         Оновити
       </button>
     </div>
 
-    <div class="admin-search-box">
+    <div class="admin-filters">
       <input
         type="text"
         id="orderSearch"
         placeholder="Пошук за номером, імʼям або телефоном"
         oninput="renderOrders()">
+
+      <select id="statusFilter" onchange="renderOrders()">
+        <option value="all">Всі статуси</option>
+        <option value="Нове">Нове</option>
+        <option value="В роботі">В роботі</option>
+        <option value="Готове">Готове</option>
+        <option value="Відправлено">Відправлено</option>
+      </select>
     </div>
+
+    <div class="admin-stats" id="adminStats"></div>
 
     <div id="ordersList"></div>
 
