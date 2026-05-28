@@ -1572,3 +1572,40 @@ footer {
 .disabled-btn:hover {
   transform: none !important;
 }
+/* DETAILS BUTTON FIX */
+
+#detailsCartBtn {
+  width: 100%;
+  margin-top: 28px;
+  padding: 18px;
+
+  border: none;
+  border-radius: 18px;
+
+  background: #2b1d17;
+  color: white;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition: .25s;
+
+  box-shadow: 0 12px 30px rgba(43,29,23,.18);
+}
+
+#detailsCartBtn:hover {
+  transform: translateY(-2px);
+  background: #1d130f;
+}
+
+#detailsCartBtn.disabled-btn {
+  background: #b8b8b8;
+  color: #666;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+#detailsCartBtn.disabled-btn:hover {
+  transform: none;
+}
