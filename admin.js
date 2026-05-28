@@ -319,6 +319,10 @@ function openProductModal(productId = null) {
     document.getElementById("productStatus").value = product.status || "В наявності";
     document.getElementById("productDescription").value = product.description || "";
     document.getElementById("productImage").value = product.image_url || "";
+    document.getElementById("productImagePreview").innerHTML =
+  product.image_url
+    ? `<img src="${product.image_url}" style="width:120px;height:120px;object-fit:cover;border-radius:18px;margin-top:12px;">`
+    : "";
   } else {
     title.innerText = "Новий товар";
 
@@ -329,6 +333,7 @@ function openProductModal(productId = null) {
     document.getElementById("productStatus").value = "В наявності";
     document.getElementById("productDescription").value = "";
     document.getElementById("productImage").value = "";
+    document.getElementById("productImagePreview").innerHTML = "";
   }
 
   modal.style.display = "block";
@@ -346,8 +351,37 @@ async function saveProduct() {
   const description_type = document.getElementById("productDescriptionType").value;
   const status = document.getElementById("productStatus").value;
   const description = document.getElementById("productDescription").value.trim();
-  const image_url = document.getElementById("productImage").value.trim();
+  let image_url = document.getElementById("productImage").value.trim();
 
+const fileInput = document.getElementById("productImageFile");
+const selectedFile = fileInput.files[0];
+  if (selectedFile) {
+
+  const base64 = await fileToBase64(selectedFile);
+
+  const uploadRes = await fetch("/.netlify/functions/product-upload", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      password: adminPassword,
+      fileBase64: base64,
+      fileName: selectedFile.name,
+      fileType: selectedFile.type
+    })
+  });
+
+  const uploadData = await uploadRes.json();
+
+  if (!uploadRes.ok || !uploadData.success) {
+    throw new Error(uploadData.error || "Помилка завантаження фото");
+  }
+
+  image_url = uploadData.image_url;
+
+  document.getElementById("productImage").value = image_url;
+}
   if (!name || !price) {
     alert("Вкажіть назву і ціну товару");
     return;
@@ -456,5 +490,17 @@ function formatDate(dateString) {
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit"
+  });
+}
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      resolve(reader.result.split(",")[1]);
+    };
+
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
   });
 }
