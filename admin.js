@@ -285,19 +285,19 @@ function renderProducts() {
               <div class="admin-stock-box">
                 <span>Кількість:</span>
 
-                <button onclick="changeStock(${product.id}, -1)">−</button>
+                <button type="button" onclick="changeStock(${product.id}, -1)">−</button>
 
                 <strong>${stock} шт</strong>
 
-                <button onclick="changeStock(${product.id}, 1)">+</button>
+                <button type="button" onclick="changeStock(${product.id}, 1)">+</button>
               </div>
 
               <div class="admin-product-actions">
-                <button class="admin-main-btn small" onclick="openProductModal(${product.id})">
+                <button type="button" class="admin-main-btn small" onclick="openProductModal(${product.id})">
                   Редагувати
                 </button>
 
-                <button class="admin-delete-btn" onclick="deleteProduct(${product.id})">
+                <button type="button" class="admin-delete-btn" onclick="deleteProduct(${product.id})">
                   Видалити
                 </button>
               </div>
@@ -481,6 +481,7 @@ async function changeStock(productId, amount) {
     alert(error.message);
   }
 }
+
 async function deleteProduct(productId) {
   const confirmDelete = confirm("Видалити цей товар?");
 
