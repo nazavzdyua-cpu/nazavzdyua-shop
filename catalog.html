@@ -41,6 +41,7 @@ class="sticky-instagram">
 
 <section class="section ideas">
   <h2>Що можна додати?</h2>
+
   <p class="wide-text">
     Це може бути фото з коханою людиною, домашнім улюбленцем,
     особлива дата, фраза або будь-яке ваше фото.
@@ -61,82 +62,32 @@ class="sticky-instagram">
     <button class="filter-btn" onclick="filterProducts('keychains', this)">Брелоки</button>
   </div>
 
-  <div class="products-grid">
-
-    <div class="card" data-category="medalions">
-      <img src="images/product1.jpeg" onclick="openProductDetails('Медальйон з підвіскою', 499, 'images/product1.jpeg', 'medalion')">
-      <h3>Медальйон з підвіскою</h3>
-      <p>499 грн</p>
-      <button onclick="openItemModal('Медальйон з підвіскою', 499, 'images/product1.jpeg')">Додати в корзину</button>
-    </div>
-
-    <div class="card" data-category="rings">
-      <img src="images/product2.jpeg" onclick="openProductDetails('Каблучка-медальйон', 449, 'images/product2.jpeg', 'ring')">
-      <h3>Каблучка-медальйон</h3>
-      <p>449 грн</p>
-      <button onclick="openItemModal('Каблучка-медальйон', 449, 'images/product2.jpeg')">Додати в корзину</button>
-    </div>
-
-    <div class="card" data-category="rings">
-      <img src="images/product3.jpeg" onclick="openProductDetails('Каблучка-медальйон серце', 399, 'images/product3.jpeg', 'ring')">
-      <h3>Каблучка-медальйон серце</h3>
-      <p>399 грн</p>
-      <button onclick="openItemModal('Каблучка-медальйон серце', 399, 'images/product3.jpeg')">Додати в корзину</button>
-    </div>
-
-    <div class="card" data-category="medalions">
-      <img src="images/product4.jpeg" onclick="openProductDetails('Медальйон з підвіскою серце', 510, 'images/product4.jpeg', 'medalion')">
-      <h3>Медальйон з підвіскою серце</h3>
-      <p>510 грн</p>
-      <button onclick="openItemModal('Медальйон з підвіскою серце', 510, 'images/product4.jpeg')">Додати в корзину</button>
-    </div>
-
-    <div class="card" data-category="keychains">
-      <img src="images/product5.jpeg" onclick="openProductDetails('Брелок-медальйон №1', 399, 'images/product5.jpeg', 'keychain')">
-      <h3>Брелок-медальйон №1</h3>
-      <p>399 грн</p>
-      <button onclick="openItemModal('Брелок-медальйон №1', 399, 'images/product5.jpeg')">Додати в корзину</button>
-    </div>
-
-    <div class="card" data-category="keychains">
-      <img src="images/product6.jpeg" onclick="openProductDetails('Брелок-медальйон №2', 429, 'images/product6.jpeg', 'keychain')">
-      <h3>Брелок-медальйон №2</h3>
-      <p>429 грн</p>
-      <button onclick="openItemModal('Брелок-медальйон №2', 429, 'images/product6.jpeg')">Додати в корзину</button>
-    </div>
-
-    <div class="card" data-category="keychains">
-      <img src="images/product8.jpeg" onclick="openProductDetails('Брелок-медальйон №3', 399, 'images/product8.jpeg', 'keychain')">
-      <h3>Брелок-медальйон №3</h3>
-      <p>399 грн</p>
-      <button onclick="openItemModal('Брелок-медальйон №3', 399, 'images/product8.jpeg')">Додати в корзину</button>
-    </div>
-
-    <div class="card" data-category="keychains">
-      <img src="images/product7.jpeg" onclick="openProductDetails('Брелок-медальйон №4', 399, 'images/product7.jpeg', 'keychain')">
-      <h3>Брелок-медальйон №4</h3>
-      <p>399 грн</p>
-      <button onclick="openItemModal('Брелок-медальйон №4', 399, 'images/product7.jpeg')">Додати в корзину</button>
-    </div>
-
+  <div class="products-grid" id="productsGrid">
+    <p>Завантаження товарів...</p>
   </div>
+
 </section>
 
 <section class="section custom-order">
   <div class="custom-order-box">
+
     <h2>Не знайшли потрібний варіант?</h2>
+
     <p>
       Якщо ви хочете замовити щось, чого немає у каталозі —
       напишіть нам в Instagram. Ми спробуємо допомогти
       та створити щось особливе саме для вас.
     </p>
 
-    <a href="https://www.instagram.com/nazavzdy.ua?igsh=MTdod3Fsb2txaDExZA%3D%3D&utm_source=qr"
+    <a
+      href="https://www.instagram.com/nazavzdy.ua?igsh=MTdod3Fsb2txaDExZA%3D%3D&utm_source=qr"
       target="_blank"
       class="instagram-footer dark">
+
       <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png">
       <span>Написати в Instagram</span>
     </a>
+
   </div>
 </section>
 
@@ -151,7 +102,7 @@ class="sticky-instagram">
 
     <div id="detailsText"></div>
 
-    <button id="submitBtn" onclick="addDetailsProductToCart()">
+    <button id="detailsCartBtn" onclick="addDetailsProductToCart()">
       Додати в корзину
     </button>
   </div>
@@ -159,6 +110,7 @@ class="sticky-instagram">
 
 <div class="popup" id="itemModal">
   <div class="popup-content">
+
     <span class="close" onclick="closeItemModal()">×</span>
 
     <img id="itemImage" class="popup-image">
@@ -174,6 +126,7 @@ class="sticky-instagram">
     <button id="submitBtn" onclick="addCurrentToCart()">
       Додати в корзину
     </button>
+
   </div>
 </div>
 
@@ -196,6 +149,7 @@ class="sticky-instagram">
 
 <div class="popup" id="confirmModal">
   <div class="popup-content">
+
     <span class="close" onclick="closeConfirmModal()">×</span>
 
     <h2>Підтвердження замовлення</h2>
@@ -203,14 +157,23 @@ class="sticky-instagram">
     <div id="confirmContent"></div>
 
     <div class="confirm-buttons">
-      <button class="btn-light" onclick="closeConfirmModal()">Повернутись назад</button>
-      <button id="confirmSendBtn" onclick="confirmAndSendOrder()">Підтвердити замовлення</button>
+
+      <button class="btn-light" onclick="closeConfirmModal()">
+        Повернутись назад
+      </button>
+
+      <button id="confirmSendBtn" onclick="confirmAndSendOrder()">
+        Підтвердити замовлення
+      </button>
+
     </div>
+
   </div>
 </div>
 
 <div class="popup" id="thanksModal">
   <div class="popup-content">
+
     <h2>Дякуємо за замовлення!</h2>
 
     <p class="wide-text">
@@ -220,6 +183,7 @@ class="sticky-instagram">
     <button id="submitBtn" onclick="closeThanksModal()">
       Закрити
     </button>
+
   </div>
 </div>
 
