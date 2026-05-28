@@ -10,13 +10,14 @@
 
 <section class="page-hero admin-hero">
   <p class="brand-small">NAZAVZDY.UA</p>
-  <h1>Кабінет замовлень</h1>
-  <p>Перегляд замовлень, файлів клієнтів та зміна статусів.</p>
+  <h1>Кабінет керування</h1>
+  <p>Замовлення та керування товарами</p>
 </section>
 
 <section class="section admin-section">
 
   <div class="admin-login-card" id="loginBox">
+
     <h2>Вхід в акаунт</h2>
     <p>Введіть пароль адміністратора</p>
 
@@ -28,44 +29,165 @@
     <button class="admin-main-btn" onclick="loginAdmin()">
       Увійти
     </button>
+
   </div>
 
-  <div id="ordersBox" style="display:none;">
+  <div id="adminPanel" style="display:none;">
 
-    <div class="admin-toolbar">
-      <div>
-        <h2>Замовлення</h2>
-        <p>Всі заявки з сайту</p>
+    <div class="admin-tabs">
+
+      <button
+        class="admin-tab active"
+        id="ordersTabBtn"
+        onclick="switchTab('orders')">
+
+        Замовлення
+      </button>
+
+      <button
+        class="admin-tab"
+        id="productsTabBtn"
+        onclick="switchTab('products')">
+
+        Товари
+      </button>
+
+    </div>
+
+    <!-- ORDERS -->
+
+    <div id="ordersTab">
+
+      <div class="admin-toolbar">
+
+        <div>
+          <h2>Замовлення</h2>
+          <p>Всі заявки з сайту</p>
+        </div>
+
+        <button
+          class="admin-main-btn small"
+          onclick="loadOrders()">
+
+          Оновити
+        </button>
+
       </div>
 
-      <button class="admin-main-btn small" onclick="loadOrders()">
-        Оновити
-      </button>
+      <div class="admin-filters">
+
+        <input
+          type="text"
+          id="orderSearch"
+          placeholder="Пошук за номером, імʼям або телефоном"
+          oninput="renderOrders()">
+
+        <select
+          id="statusFilter"
+          onchange="renderOrders()">
+
+          <option value="all">Всі статуси</option>
+          <option value="Нове">Нове</option>
+          <option value="В роботі">В роботі</option>
+          <option value="Готове">Готове</option>
+          <option value="Відправлено">Відправлено</option>
+
+        </select>
+
+      </div>
+
+      <div id="adminStats"></div>
+      <div id="ordersList"></div>
+
     </div>
 
-    <div class="admin-filters">
-      <input
-        type="text"
-        id="orderSearch"
-        placeholder="Пошук за номером, імʼям або телефоном"
-        oninput="renderOrders()">
+    <!-- PRODUCTS -->
 
-      <select id="statusFilter" onchange="renderOrders()">
-        <option value="all">Всі статуси</option>
-        <option value="Нове">Нове</option>
-        <option value="В роботі">В роботі</option>
-        <option value="Готове">Готове</option>
-        <option value="Відправлено">Відправлено</option>
-      </select>
+    <div id="productsTab" style="display:none;">
+
+      <div class="admin-toolbar">
+
+        <div>
+          <h2>Товари</h2>
+          <p>Редагування каталогу</p>
+        </div>
+
+        <button
+          class="admin-main-btn small"
+          onclick="openProductModal()">
+
+          + Додати товар
+        </button>
+
+      </div>
+
+      <div id="productsList"></div>
+
     </div>
-
-    <div class="admin-stats" id="adminStats"></div>
-
-    <div id="ordersList"></div>
 
   </div>
 
 </section>
+
+<!-- PRODUCT MODAL -->
+
+<div class="popup" id="productModal">
+
+  <div class="popup-content">
+
+    <span class="close" onclick="closeProductModal()">×</span>
+
+    <h2 id="productModalTitle">
+      Новий товар
+    </h2>
+
+    <input
+      type="text"
+      id="productName"
+      placeholder="Назва">
+
+    <input
+      type="number"
+      id="productPrice"
+      placeholder="Ціна">
+
+    <select id="productCategory">
+      <option value="medalions">Медальйони</option>
+      <option value="rings">Каблучки</option>
+      <option value="keychains">Брелоки</option>
+    </select>
+
+    <select id="productDescriptionType">
+      <option value="medalion">Опис медальйона</option>
+      <option value="ring">Опис каблучки</option>
+      <option value="keychain">Опис брелока</option>
+    </select>
+
+    <select id="productStatus">
+      <option value="В наявності">В наявності</option>
+      <option value="Закінчується">Закінчується</option>
+      <option value="Немає в наявності">Немає в наявності</option>
+    </select>
+
+    <textarea
+      id="productDescription"
+      placeholder="Опис товару"></textarea>
+
+    <input
+      type="text"
+      id="productImage"
+      placeholder="Посилання на фото">
+
+    <button
+      class="admin-main-btn"
+      onclick="saveProduct()">
+
+      Зберегти товар
+    </button>
+
+  </div>
+
+</div>
 
 <script src="admin.js"></script>
 
