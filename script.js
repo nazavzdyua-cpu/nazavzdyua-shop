@@ -282,14 +282,20 @@ function openItemModalFromId(id) {
 
   if (stockInfo.isOut) return;
 
-  openItemModal(product.name, product.price, product.image_url || "images/logo.jpeg");
+  openItemModal(
+    product.name,
+    product.price,
+    product.image_url || "images/logo.jpeg",
+    product.id
+  );
 }
 
-function openItemModal(product, price, image) {
+function openItemModal(product, price, image, productId = null) {
   currentProduct = {
     product,
     price: Number(price),
-    image
+    image,
+    productId
   };
 
   document.getElementById("itemModal").style.display = "block";
@@ -357,6 +363,7 @@ function addCurrentToCart() {
 
     cart.push({
       product: currentProduct.product,
+      productId: currentProduct.productId,
       price: currentProduct.price + extra,
       basePrice: currentProduct.price,
       photoCount,
@@ -497,6 +504,7 @@ async function confirmAndSendOrder() {
 
     items.push({
       product: item.product,
+      productId: item.productId,
       price: item.price,
       photoCount: item.photoCount,
       comment: item.comment,
@@ -549,6 +557,8 @@ async function confirmAndSendOrder() {
     cart = [];
     updateCartButton();
     renderCart();
+
+    await loadCatalogProducts();
 
   } catch (error) {
     alert("Сталася помилка. Спробуйте ще раз або напишіть нам в Instagram.");
