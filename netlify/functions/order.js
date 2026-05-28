@@ -41,6 +41,8 @@ exports.handler = async function(event) {
     const order = orderJson[0];
     const orderId = order.id;
 
+    const productCounts = {};
+
     for (let i = 0; i < data.items.length; i++) {
       const item = data.items[i];
 
@@ -100,6 +102,67 @@ exports.handler = async function(event) {
 
       if (!itemRes.ok) {
         throw new Error(itemText);
+      }
+
+      if (item.productId) {
+        productCounts[item.productId] = (productCounts[item.productId] || 0) + 1;
+      }
+    }
+
+    for (const productId of Object.keys(productCounts)) {
+      const countToSubtract = productCounts[productId];
+
+      const productRes = await fetch(
+        `${SUPABASE_URL}/rest/v1/products?id=eq.${productId}&select=id,stock`,
+        {
+          headers: {
+            "apikey": SERVICE_KEY,
+            "Authorization": `Bearer ${SERVICE_KEY}`
+          }
+        }
+      );
+
+      const productJson = await productRes.json();
+
+      if (!productRes.ok) {
+        throw new Error(JSON.stringify(productJson));
+      }
+
+      const product = productJson[0];
+
+      if (product) {
+        const currentStock = Number(product.stock || 0);
+        const newStock = Math.max(currentStock - countToSubtract, 0);
+
+        let newStatus = "В наявності";
+
+        if (newStock <= 0) {
+          newStatus = "Немає в наявності";
+        } else if (newStock <= 2) {
+          newStatus = "Закінчується";
+        }
+
+        const updateRes = await fetch(
+          `${SUPABASE_URL}/rest/v1/products?id=eq.${productId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "apikey": SERVICE_KEY,
+              "Authorization": `Bearer ${SERVICE_KEY}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              stock: newStock,
+              status: newStatus
+            })
+          }
+        );
+
+        const updateText = await updateRes.text();
+
+        if (!updateRes.ok) {
+          throw new Error(updateText);
+        }
       }
     }
 
