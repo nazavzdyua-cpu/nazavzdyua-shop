@@ -173,10 +173,18 @@
       id="productDescription"
       placeholder="Опис товару"></textarea>
 
-    <input
-      type="text"
-      id="productImage"
-      placeholder="Посилання на фото">
+    <label class="form-label">Фото товару</label>
+
+<input
+  type="file"
+  id="productImageFile"
+  accept="image/*">
+
+<input
+  type="hidden"
+  id="productImage">
+
+<div id="productImagePreview"></div>
 
     <button
       class="admin-main-btn"
